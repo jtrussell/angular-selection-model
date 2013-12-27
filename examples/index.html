@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Demo Page</title>
+
+    <style type="text/css" media="all">
+      .selected {
+        background-color: #BAD4EF;
+      }
+    </style>
+  </head>
+  <body ng-app="demo">
+    
+    <h1>Examples</h1>
+
+    <div ng-controller="BasicCtrl as ex1">
+      <h2>Table with Checkboxes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>First Col</th>
+            <th>Second</th>
+            <th>Last Col</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in ex1.items"
+            selection-model
+            selection-model-type="checkbox"
+            selection-model-mode="multiple">
+            <td><input type="checkbox"></td>
+            <td>{{$index + 1}}</td>
+            <td>{{item.label}}</td>
+            <td>{{item.value}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div ng-controller="BasicCtrl as ex2">
+      <h2>Basic List</h2>
+      <ul>
+        <li ng-repeat="item in ex2.items" selection-model>
+          {{$index+1}} <strong>{{item.label}}</strong> ({{item.value}})
+        </li>
+      </ul>
+    </div>
+
+    <script src="angular/angular.js" type="text/javascript" charset="utf-8"></script>
+    <script src="selection-model.js" type="text/javascript" charset="utf-8"></script>
+    <script src="main.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>

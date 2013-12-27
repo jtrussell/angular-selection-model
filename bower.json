@@ -1,0 +1,23 @@
+{
+  "name": "selection-model",
+  "version": "0.0.0",
+  "authors": [
+    "jtrussell"
+  ],
+  "description": "Selection models for angular tables",
+  "main": "dist/selection-model.js",
+  "keywords": [
+    "table",
+    "selection"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/jtrussell/angular-selection-model.git",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

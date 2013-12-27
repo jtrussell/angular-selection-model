@@ -1,0 +1,37 @@
+{
+  "name": "selection-model",
+  "version": "0.0.0",
+  "description": "Selection model for angularjs, the ngRepeat companion",
+  "main": "index.js",
+  "private": true,
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jtrussell/angular-selection-model.git"
+  },
+  "keywords": [
+    "table",
+    "selection"
+  ],
+  "author": "jtrussell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jtrussell/angular-selection-model/issues"
+  },
+  "homepage": "https://github.com/jtrussell/angular-selection-model",
+  "devDependencies": {
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "matchdep": "~0.3.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-connect": "~0.5.0"
+  }
+}
