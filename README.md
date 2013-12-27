@@ -10,7 +10,7 @@ replacement for any of those things. `selectionModel` works directly with the
 of the items `ngRepeat` iterates over (ok fine, it also changes some class names
 and checkbox states if you're into that sort of thing).
 
-Here's an simple example:
+Here's a simple example, your controller:
 
 ```javascript
 angular.module('myApp').controller('FancyStuffCtrl', function() {
@@ -21,6 +21,8 @@ angular.module('myApp').controller('FancyStuffCtrl', function() {
   ];
 });
 ```
+
+and the markup:
 
 ```html
 <ul ng-controller="FancyStuffCtrl as fancy">
