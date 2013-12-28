@@ -1,3 +1,5 @@
+/*global console */
+
 angular.module('selectionModel').directive('selectionModel', [
   'selectionStack',
   function(selectionStack) {
@@ -106,11 +108,34 @@ angular.module('selectionModel').directive('selectionModel', [
           });
         };
 
+        /**
+         * Item click handler
+         *
+         * Use the `ctrl` key to select/deselect while preserving the rest of
+         * your selection. Note your your selection mode must be set to
+         * `'multiple'` to allow for more than one selected item at a time. In
+         * single select mode you still must use the `ctrl` or `shitft` keys to
+         * deselect an item.
+         *
+         * The `shift` key allows you to select ranges of items at a time. Use
+         * `ctrl` + `shift` to select a range while preserving your existing
+         * selection. In single select mode `shift` behaves like `ctrl`.
+         *
+         * When an item is clicked with no modifier keys pressed it will be the
+         * only selected item.
+         *
+         * On Mac the `meta` key is treated as `ctrl`.
+         */
         element.on('click', function(event) {
+          console.log(event);
+
+          var isCtrlKeyDown = event.ctrlKey || event.metaKey
+            , isShiftKeyDown = event.shiftKey;
+
           // Select multiple allows for ranges - use shift key
-          if(event.shiftKey && /^multi(ple)?$/.test(smMode)) {
+          if(isShiftKeyDown && /^multi(ple)?$/.test(smMode)) {
             // Use ctrl+shift for additive ranges
-            if(!event.ctrlKey) {
+            if(!isCtrlKeyDown) {
               deselectAllItems();
             }
             selectItemsBetween(selectionStack.peek());
@@ -119,7 +144,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           // Use ctrl/shift without multi select to true toggle a row
-          if(event.ctrlKey || event.shiftKey) {
+          if(isCtrlKeyDown || isShiftKeyDown) {
             var isSelected = !smItem[selectedAttribute];
             if(!/^multi(ple)?$/.test(smMode)) {
               deselectAllItems();
@@ -139,7 +164,7 @@ angular.module('selectionModel').directive('selectionModel', [
           scope.$apply(updateDom);
         });
 
-        // Update the dom if we're coming in with a selection
+        // We might be coming in with a selection
         updateDom();
 
         scope.$watchCollection(repeatParts[0], updateDom);
