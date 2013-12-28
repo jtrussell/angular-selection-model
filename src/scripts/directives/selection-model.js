@@ -1,6 +1,6 @@
 angular.module('selectionModel').directive('selectionModel', [
-  'selectionStack',
-  function(selectionStack) {
+  'selectionStack', 'uuidGen', '$log',
+  function(selectionStack, uuidGen, $log) {
     'use strict';
     return {
       restrict: 'A',
@@ -34,7 +34,8 @@ angular.module('selectionModel').directive('selectionModel', [
          * Supports 'single' and 'multi[ple]'. Single mode will only allow one
          * item to be marked as selected at a time.
          */
-        var smMode = attrs.selectionModelMode || defaultMode;
+        var smMode = attrs.selectionModelMode || defaultMode
+          , isMultiMode = /^multi(ple)?$/.test(smMode);
 
         /**
          * The item attribute to track selected status
@@ -62,6 +63,38 @@ angular.module('selectionModel').directive('selectionModel', [
         if(!repeatLine) {
           throw 'selectionModel must be used along side ngRepeat';
         }
+
+        /**
+         * The last-click stack id
+         *
+         * There may be multiple selection models on the page and each will need
+         * independent click stacks.
+         */
+        var clickStackId = (function() {
+          if(!isMultiMode) {
+            return null;
+          }
+          var idAttr = 'data-selection-model-stack-id';
+          // Id may be cached on this element
+          var stackId = element.attr(idAttr);
+          if(stackId) {
+            return stackId;
+          }
+
+          // Otherwise it may be on the partent
+          stackId = element.parent().attr(idAttr);
+          if(stackId) {
+            element.attr(idAttr, stackId);
+            return stackId;
+          }
+
+          // welp guess we're the first, create a new one and cache it on this
+          // element (for us) and the parent element (for others)
+          stackId = uuidGen.create();
+          element.attr(idAttr, stackId);
+          element.parent().attr(idAttr, stackId);
+          return stackId;
+        }());
 
         var repeatParts = repeatLine.split(' in ')
           , smItem = scope.$eval(repeatParts[0]);
@@ -134,7 +167,7 @@ angular.module('selectionModel').directive('selectionModel', [
             if(!isCtrlKeyDown) {
               deselectAllItems();
             }
-            selectItemsBetween(selectionStack.peek());
+            selectItemsBetween(selectionStack.peek(clickStackId));
             scope.$apply(updateDom);
             return;
           }
@@ -147,7 +180,7 @@ angular.module('selectionModel').directive('selectionModel', [
             }
             smItem[selectedAttribute] = isSelected;
             if(smItem[selectedAttribute]) {
-              selectionStack.push(smItem);
+              selectionStack.push(clickStackId, smItem);
             }
             scope.$apply(updateDom);
             return;
@@ -156,7 +189,7 @@ angular.module('selectionModel').directive('selectionModel', [
           // Otherwise the clicked on row becomes the only selected item
           deselectAllItems();
           smItem[selectedAttribute] = true;
-          selectionStack.push(smItem);
+          selectionStack.push(clickStackId, smItem);
           scope.$apply(updateDom);
         });
 
