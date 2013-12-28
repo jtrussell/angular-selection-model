@@ -1,5 +1,3 @@
-/*global console */
-
 angular.module('selectionModel').directive('selectionModel', [
   'selectionStack',
   function(selectionStack) {
@@ -127,8 +125,6 @@ angular.module('selectionModel').directive('selectionModel', [
          * On Mac the `meta` key is treated as `ctrl`.
          */
         element.on('click', function(event) {
-          console.log(event);
-
           var isCtrlKeyDown = event.ctrlKey || event.metaKey
             , isShiftKeyDown = event.shiftKey;
 
