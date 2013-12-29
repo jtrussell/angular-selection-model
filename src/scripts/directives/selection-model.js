@@ -1,6 +1,6 @@
 angular.module('selectionModel').directive('selectionModel', [
-  'selectionStack', 'uuidGen', '$log',
-  function(selectionStack, uuidGen, $log) {
+  'selectionStack', 'uuidGen',
+  function(selectionStack, uuidGen) {
     'use strict';
     return {
       restrict: 'A',
@@ -108,7 +108,7 @@ angular.module('selectionModel').directive('selectionModel', [
 
           if('checkbox' === smType) {
             var cb = element.find('input');
-            cb[0].checked = smItem[selectedAttribute];
+            cb.prop('checked', smItem[selectedAttribute]);
           }
         };
 
@@ -196,7 +196,14 @@ angular.module('selectionModel').directive('selectionModel', [
         // We might be coming in with a selection
         updateDom();
 
-        scope.$watchCollection(repeatParts[0], updateDom);
+        scope.$watch(repeatParts[0] + '.' + selectedAttribute, function(newVal, oldVal) {
+          // Be mindful of programmatic changes to selected state
+          if(!isMultiMode && newVal && !oldVal) {
+            deselectAllItems();
+            smItem[selectedAttribute] = true;
+          }
+          updateDom();
+        });
       }
     };
   }
