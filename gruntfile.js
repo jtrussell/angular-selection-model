@@ -1,7 +1,7 @@
 /*jshint node:true */
-'use strict';
 
 module.exports = function(grunt) {
+  'use strict';
 
   // Project configuration
   grunt.initConfig({
@@ -34,15 +34,12 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      scripts: {
-        files: 'src/scripts/**/*.js',
-        tasks: ['jshint', 'build']
-      },
       livereload: {
         options: {
           livereload: true
         },
-        files: ['dist/*', 'examples/**/*']
+        files: ['src/scripts/**/*.js', 'examples/**/*'],
+        tasks: ['jshint', 'build']
       }
     },
 
@@ -54,6 +51,15 @@ module.exports = function(grunt) {
           livereload: true,
           open: 'http://localhost:9000/index.html'
         }
+      }
+    },
+
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        autoWatch: false,
+        singleRun: true,
+        browsers: [process.env.KARMA_BROWSER || 'Firefox']
       }
     }
   });
@@ -70,6 +76,11 @@ module.exports = function(grunt) {
     'watch'
   ]);
 
+  grunt.registerTask('test', [
+    'jshint',
+    'karma'
+  ]);
+
   grunt.registerTask('build', [
     'concat',
     'uglify'
@@ -77,8 +88,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [
     'clean',
-    'jshint',
-    'karma',
+    'test',
     'build'
   ]);
 
