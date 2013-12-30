@@ -115,6 +115,7 @@ the `grunt-cli` module installed globally.
 ## Release history
 
 - 2013-12-28 v0.1.1 Initial release.
+- 2013-12-30 v0.1.2 Deselect filtered out items.
 
 
 ## License
