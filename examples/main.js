@@ -5,7 +5,6 @@
 var app = ng.module('demo', ['selectionModel']);
 
 app.controller('BasicCtrl', function() {
-  
   this.items = [
     {selected: true, value: 78, label: 'seventy eight'},
     {selected: false, value: 62, label: 'sixty two'},
@@ -18,7 +17,15 @@ app.controller('BasicCtrl', function() {
     {selected: false, value: 55, label: 'fifty five'},
     {selected: false, value: 2000, label: 'two thousand'}
   ];
+});
 
+app.controller('NonStandardCtrl', function() {
+  this.items = [
+    {is_checked: true, value: 33, label: 'foo'},
+    {is_checked: false, value: 44, label: 'foobar'},
+    {is_checked: false, value: 55, label: 'wowbar'},
+    {is_checked: false, value: 66, label: 'snapper'}
+  ];
 });
 
 }(angular));

@@ -5,7 +5,10 @@
 
     <style type="text/css" media="all">
       .selected {
-        background-color: #BAD4EF;
+        background-color: lightskyblue;
+      }
+      .boogaboo {
+        background-color: bisque;
       }
     </style>
   </head>
@@ -39,10 +42,23 @@
     </div>
 
     <div ng-controller="BasicCtrl as ex2">
-      <h2>Basic List</h2>
+      <h2>Basic List with Filter</h2>
+      <input ng-model="querystr" type="text" />
       <ul>
-        <li ng-repeat="item in ex2.items" selection-model>
+        <li ng-repeat="item in ex2.items | filter:querystr" selection-model>
           {{$index+1}} <strong>{{item.label}}</strong> ({{item.value}})
+        </li>
+      </ul>
+    </div>
+
+    <div ng-controller="NonStandardCtrl as ex3">
+      <h2>Non Standard Attrs</h2>
+      <ul>
+        <li ng-repeat="item in ex3.items"
+            selection-model
+            selection-model-selected-attribute="is_checked"
+            selection-model-selected-class="boogaboo">
+          {{item.value}} {{item.label}}
         </li>
       </ul>
     </div>
