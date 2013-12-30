@@ -114,8 +114,9 @@ the `grunt-cli` module installed globally.
 
 ## Release history
 
-- 2013-12-28 v0.1.1 Initial release.
+- 2013-12-30 v0.2.0 Add new mode `'multi-additive'`.
 - 2013-12-30 v0.1.2 Deselect filtered out items.
+- 2013-12-28 v0.1.1 Initial release.
 
 
 ## License
