@@ -112,8 +112,14 @@ angular.module('selectionModel').directive('selectionModel', [
           }
         };
 
-        var getAllItems = function() {
+        var getAllVisibleItems = function() {
           return scope.$eval(repeatParts[1]);
+        };
+
+        // Strips away filters - this lets us e.g. deselect items that are
+        // filtered out
+        var getAllItems = function() {
+          return scope.$eval(repeatParts[1].split('|')[0]);
         };
 
         var deselectAllItems = function() {
@@ -123,13 +129,13 @@ angular.module('selectionModel').directive('selectionModel', [
         };
 
         var selectItemsBetween = function(lastItem) {
-          var allItems = getAllItems()
+          var allItems = getAllVisibleItems()
             , foundLastItem = false
             , foundThisItem = false;
 
           lastItem = lastItem || smItem;
 
-          angular.forEach(getAllItems(), function(item) {
+          angular.forEach(getAllVisibleItems(), function(item) {
             foundThisItem = foundThisItem || item === smItem;
             foundLastItem = foundLastItem || item === lastItem;
             var inRange = (foundLastItem + foundThisItem) === 1;
