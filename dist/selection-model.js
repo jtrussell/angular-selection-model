@@ -45,11 +45,18 @@ angular.module('selectionModel').directive('selectionModel', [
         /**
          * The selection mode
          *
-         * Supports 'single' and 'multi[ple]'. Single mode will only allow one
-         * item to be marked as selected at a time.
+         * Supports 'single', 'multi[ple]', and 'multi[ple]-additive'. Single
+         * mode will only allow one item to be marked as selected at a time.
+         * Vanilla multi mode allows for multiple selectioned items but requires
+         * modifier keys to select more than one item at a time. Additive-multi
+         * mode allows for multiple items to be selected and will not deselect
+         * other items when a vanilla click is made. Additive multi also allows
+         * for de-selection without a modifier key (think of `'multi-additive'`
+         * as turning every click into a ctrl-click.
          */
         var smMode = attrs.selectionModelMode || defaultMode
-          , isMultiMode = /^multi(ple)?$/.test(smMode);
+          , isMultiMode = /^multi(ple)?(-additive)?$/.test(smMode)
+          , isModeAdditive = /^multi(ple)?-additive/.test(smMode);
 
         /**
          * The item attribute to track selected status
@@ -178,11 +185,11 @@ angular.module('selectionModel').directive('selectionModel', [
          * On Mac the `meta` key is treated as `ctrl`.
          */
         element.on('click', function(event) {
-          var isCtrlKeyDown = event.ctrlKey || event.metaKey
+          var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
             , isShiftKeyDown = event.shiftKey;
 
           // Select multiple allows for ranges - use shift key
-          if(isShiftKeyDown && /^multi(ple)?$/.test(smMode)) {
+          if(isShiftKeyDown && isMultiMode) {
             // Use ctrl+shift for additive ranges
             if(!isCtrlKeyDown) {
               deselectAllItems();
@@ -195,7 +202,7 @@ angular.module('selectionModel').directive('selectionModel', [
           // Use ctrl/shift without multi select to true toggle a row
           if(isCtrlKeyDown || isShiftKeyDown) {
             var isSelected = !smItem[selectedAttribute];
-            if(!/^multi(ple)?$/.test(smMode)) {
+            if(!isMultiMode) {
               deselectAllItems();
             }
             smItem[selectedAttribute] = isSelected;
@@ -208,6 +215,7 @@ angular.module('selectionModel').directive('selectionModel', [
 
           // Otherwise the clicked on row becomes the only selected item
           deselectAllItems();
+         
           smItem[selectedAttribute] = true;
           selectionStack.push(clickStackId, smItem);
           scope.$apply(updateDom);
