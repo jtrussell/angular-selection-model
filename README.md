@@ -95,6 +95,23 @@ keys.
 The behavior of the multi select mode is modeled after ExtJS data grids.
 
 
+#### The `selectionModelOptionsProvider`
+
+Use the `selectionModelOptionsProvider` in your module's `config` method to set
+global options.
+
+```javascript
+myApp.config(function(selectionModelOptionsProvider) {
+  selectionModelOptionsProvider.set({
+    selectedAttribute: 'mySelectedObjectAttribute',
+    selectedClass: 'my-selected-dom-node',
+    type: 'checkbox',
+    model: 'multiple-additive'
+  });
+});
+```
+
+
 ## Even more...
 
 Check out the docs (as soon as I hit the codebase with dox that is...)
@@ -114,6 +131,7 @@ the `grunt-cli` module installed globally.
 
 ## Release history
 
+- 2014-01-08 v0.3.0 Add `selectionModelOptionsProvider` for global configuration
 - 2013-12-30 v0.2.0 Add new mode `'multi-additive'`.
 - 2013-12-30 v0.1.2 Deselect filtered out items.
 - 2013-12-28 v0.1.1 Initial release.
