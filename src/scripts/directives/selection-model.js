@@ -1,18 +1,22 @@
 angular.module('selectionModel').directive('selectionModel', [
-  'selectionStack', 'uuidGen',
-  function(selectionStack, uuidGen) {
+  'selectionStack', 'uuidGen', 'selectionModelOptions',
+  function(selectionStack, uuidGen, selectionModelOptions) {
     'use strict';
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
 
         /**
-         * @todo Expose a provider to configure these
+         * Defaults from the options provider
+         *
+         * Use `selectionModelOptionsProvider` when configuring your module to
+         * set application wide defaults
          */
-        var defaultSelectedAttribute = 'selected'
-          , defaultSelectedClass = 'selected'
-          , defaultType = 'basic'
-          , defaultMode = 'single';
+        var defaultOptions = selectionModelOptions.get()
+          , defaultSelectedAttribute = defaultOptions.selectedAttribute
+          , defaultSelectedClass = defaultOptions.selectedClass
+          , defaultType = defaultOptions.type
+          , defaultMode = defaultOptions.mode;
 
         /**
          * The selection model type

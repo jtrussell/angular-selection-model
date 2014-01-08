@@ -13,20 +13,24 @@
 angular.module('selectionModel', []);
 
 angular.module('selectionModel').directive('selectionModel', [
-  'selectionStack', 'uuidGen',
-  function(selectionStack, uuidGen) {
+  'selectionStack', 'uuidGen', 'selectionModelOptions',
+  function(selectionStack, uuidGen, selectionModelOptions) {
     'use strict';
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
 
         /**
-         * @todo Expose a provider to configure these
+         * Defaults from the options provider
+         *
+         * Use `selectionModelOptionsProvider` when configuring your module to
+         * set application wide defaults
          */
-        var defaultSelectedAttribute = 'selected'
-          , defaultSelectedClass = 'selected'
-          , defaultType = 'basic'
-          , defaultMode = 'single';
+        var defaultOptions = selectionModelOptions.get()
+          , defaultSelectedAttribute = defaultOptions.selectedAttribute
+          , defaultSelectedClass = defaultOptions.selectedClass
+          , defaultType = defaultOptions.type
+          , defaultMode = defaultOptions.mode;
 
         /**
          * The selection model type
@@ -236,6 +240,41 @@ angular.module('selectionModel').directive('selectionModel', [
     };
   }
 ]);
+
+
+/**
+ * Default options for the selection model directive
+ *
+ * 
+ *
+ * @package selectionModel
+ */
+
+angular.module('selectionModel').provider('selectionModelOptions', [function() {
+  'use strict';
+
+  var options = {
+    selectedAttribute: 'selected',
+    selectedClass: 'selected',
+    type: 'basic',
+    mode: 'single'
+  };
+
+  this.set = function(userOpts) {
+    angular.extend(options, userOpts);
+  };
+
+  this.$get = function() {
+    var exports = {
+      get: function() {
+        return angular.copy(options);
+      }
+    };
+    return exports;
+  };
+
+
+}]);
 
 
 angular.module('selectionModel').service('selectionStack', function() {
