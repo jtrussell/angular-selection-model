@@ -94,9 +94,8 @@ Note that you do not need to manually set the checkbox state.
 ### selectionModelMode
 Default: `'single'`
 
-May be be either `'single'` or `'multiple'` (or `'multi'`). Make use of this
-option to to allow the user select multiple items using their `shift` and `ctrl`
-keys.
+May be be either `'single'`, `'multiple'`, or `'multiple-additive'`. Make use of
+the multi* modes to to allow the user select more than one item at a time.
 
 The behavior of the multi select mode is modeled after ExtJS data grids. By
 default a vanilla click (no `shift` or `ctrl`) will set the entire selection
