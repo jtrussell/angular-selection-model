@@ -95,7 +95,7 @@ keys.
 The behavior of the multi select mode is modeled after ExtJS data grids.
 
 
-#### The `selectionModelOptionsProvider`
+## The `selectionModelOptionsProvider`
 
 Use the `selectionModelOptionsProvider` in your module's `config` method to set
 global options.
