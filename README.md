@@ -179,6 +179,7 @@ the `grunt-cli` module installed globally.
 
 ## Release history
 
+- 2014-01-10 v0.4.0 Expose read only list of selected items
 - 2014-01-08 v0.3.0 Add `selectionModelOptionsProvider` for global configuration
 - 2013-12-30 v0.2.0 Add new mode `'multi-additive'`.
 - 2013-12-30 v0.1.2 Deselect filtered out items.
