@@ -17,6 +17,8 @@ app.controller('BasicCtrl', function() {
     {selected: false, value: 55, label: 'fifty five'},
     {selected: false, value: 2000, label: 'two thousand'}
   ];
+
+  this.selectedItems = [];
 });
 
 app.controller('NonStandardCtrl', function() {
@@ -26,6 +28,8 @@ app.controller('NonStandardCtrl', function() {
     {is_checked: false, value: 55, label: 'wowbar'},
     {is_checked: false, value: 66, label: 'snapper'}
   ];
+
+  this.selectedItems = [];
 });
 
 }(angular));

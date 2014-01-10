@@ -6,9 +6,15 @@
 
 They are all great at what they do and `selectionModel` is not meant to be a
 replacement for any of those things. `selectionModel` works directly with the
-`ngRepeat` directive, it does **nothing** other than manage the selected state
-of the items `ngRepeat` iterates over (ok fine, it also changes some class names
-and checkbox states if you're into that sort of thing).
+`ngRepeat` directive, it does **nothing** other than keep track of which of the
+iterated over items are selected.
+
+How does it work? The directive looks for a particular attribute on your
+collection items, by default that's `selected`. When an item becomes selected
+that attribute is set to `true`... when it gets deselected (surprise) it's set
+to `false`. You can programmatically flip the state of that attribute as well
+and the directive will respond by updating your view. For convenience we also
+expose a read only list of just the selected items.
 
 So when should you use `selectionModel`? You might consider it if:
 
@@ -111,6 +117,48 @@ myApp.config(function(selectionModelOptionsProvider) {
 });
 ```
 
+
+### selectionModelSelectedItems
+Type: `Array`
+Default: `undefined`
+
+If used this should resolve to an (initially empty) array.  The directive will
+keep the contents of that array up to date with the selection in your
+collection. Note that this is a **read only** list. Adding items will have no
+effect on your collection - and order is not guarenteed.
+
+Also keep in mind that unless you're using a mode which allows for more than one
+selected item this will always be an array of length 1.
+
+In your controller:
+
+```javascript
+myApp.controller('SillyCtrl', function() {
+  this.items = [ /* a bunch of stuff */ ];
+
+  // Should start empty even if you have an initial selection
+  this.selectedItems = []; 
+});
+```
+
+In your view
+
+```html
+<div ng-controller="SillyCtrl as silly">
+  <ul>
+    <li ng-repeat="item in silly.items"
+        selection-model
+        selection-model-mode="multiple-additive"
+        selection-model-selected-items="selectedItems">
+      Click me!
+    </li>
+  </ul>
+
+  <p>
+    You've selected {{silly.selectedItems.length}} item(1)
+  </p>
+</div>
+```
 
 ## Even more...
 

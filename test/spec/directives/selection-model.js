@@ -25,6 +25,7 @@ describe('Directive: selectionModel', function() {
       {selected: true, value: 'foo'},
       {selected: false, value: 'bar'}
     ];
+    scope.selection = [];
   });
 
 
@@ -87,6 +88,9 @@ describe('Directive: selectionModel', function() {
     });
   });
 
+  /**
+   * @todo
+   */
   describe('with multiselect enabled', function() {
     var tpl = [
       '<ul>',
@@ -97,6 +101,24 @@ describe('Directive: selectionModel', function() {
         '</li>',
       '</ul>'
     ].join('');
+
     
+  });
+
+  /**
+   * @todo
+   */
+  describe('with selection tracking', function() {
+    var tpl = [
+      '<ul>',
+        '<li ng-repeat="item in bag" ',
+            'selection-model ',
+            'selection-model-mode="multiple"> ',
+            'selection-model-selected-items="selection" ',
+          '{{item.value}} <input type="checkbox">',
+        '</li>',
+      '</ul>'
+    ].join('');
+
   });
 });

@@ -1,3 +1,4 @@
+
 angular.module('selectionModel').directive('selectionModel', [
   'selectionStack', 'uuidGen', 'selectionModelOptions',
   function(selectionStack, uuidGen, selectionModelOptions) {
@@ -74,6 +75,16 @@ angular.module('selectionModel').directive('selectionModel', [
         if(!repeatLine) {
           throw 'selectionModel must be used along side ngRepeat';
         }
+
+        /**
+         * The list of selected items
+         *
+         * If used should resolve to an (initially empty) array.  Use this in
+         * your view as **read only** if you'd like to do something with just
+         * the selected items. Note that order is not guarenteed and any items
+         * added to this array programmatically are ignored.
+         */
+        var selectedItemsList = scope.$eval(attrs.selectionModelSelectedItems);
 
         /**
          * The last-click stack id
@@ -185,7 +196,7 @@ angular.module('selectionModel').directive('selectionModel', [
               deselectAllItems();
             }
             selectItemsBetween(selectionStack.peek(clickStackId));
-            scope.$apply(updateDom);
+            scope.$apply();
             return;
           }
 
@@ -199,7 +210,7 @@ angular.module('selectionModel').directive('selectionModel', [
             if(smItem[selectedAttribute]) {
               selectionStack.push(clickStackId, smItem);
             }
-            scope.$apply(updateDom);
+            scope.$apply();
             return;
           }
 
@@ -208,7 +219,7 @@ angular.module('selectionModel').directive('selectionModel', [
          
           smItem[selectedAttribute] = true;
           selectionStack.push(clickStackId, smItem);
-          scope.$apply(updateDom);
+          scope.$apply();
         });
 
         // We might be coming in with a selection
@@ -220,6 +231,20 @@ angular.module('selectionModel').directive('selectionModel', [
             deselectAllItems();
             smItem[selectedAttribute] = true;
           }
+
+          if(angular.isArray(selectedItemsList)) {
+            var ixSmItem = selectedItemsList.indexOf(smItem);
+            if(smItem[selectedAttribute]) {
+              if(-1 === ixSmItem) {
+                selectedItemsList.push(smItem);
+              }
+            } else {
+              if(-1 < ixSmItem) {
+                selectedItemsList.splice(ixSmItem, 1);
+              }
+            }
+          }
+
           updateDom();
         });
       }

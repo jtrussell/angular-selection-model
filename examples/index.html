@@ -31,7 +31,8 @@
           <tr ng-repeat="item in ex1.items"
             selection-model
             selection-model-type="checkbox"
-            selection-model-mode="multiple">
+            selection-model-mode="multiple"G
+            selection-model-selected-items="ex1.selectedItems">
             <td><input type="checkbox"></td>
             <td>{{$index + 1}}</td>
             <td>{{item.label}}</td>
@@ -39,6 +40,13 @@
           </tr>
         </tbody>
       </table>
+
+      <h3>Selected items</h3>
+      <ul>
+        <li ng-repeat="item in ex1.selectedItems">
+          {{$index + 1}} {{item.label}}
+        </li>
+      </ul>
     </div>
 
     <div ng-controller="BasicCtrl as ex2">
@@ -53,12 +61,22 @@
 
     <div ng-controller="NonStandardCtrl as ex3">
       <h2>Non Standard Attrs</h2>
+
+      <h3>Selection list</h3>
       <ul>
         <li ng-repeat="item in ex3.items"
             selection-model
             selection-model-selected-attribute="is_checked"
-            selection-model-selected-class="boogaboo">
+            selection-model-selected-class="boogaboo"
+            selection-model-selected-items="ex3.selectedItems">
           {{item.value}} {{item.label}}
+        </li>
+      </ul>
+
+      <h3>Selected items</h3>
+      <ul>
+        <li ng-repeat="item in ex3.selectedItems">
+          {{$index + 1}} {{item.label}}
         </li>
       </ul>
     </div>
