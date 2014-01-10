@@ -98,23 +98,21 @@ May be be either `'single'` or `'multiple'` (or `'multi'`). Make use of this
 option to to allow the user select multiple items using their `shift` and `ctrl`
 keys.
 
-The behavior of the multi select mode is modeled after ExtJS data grids.
+The behavior of the multi select mode is modeled after ExtJS data grids. By
+default a vanilla click (no `shift` or `ctrl`) will set the entire selection
+to the single item clicked. Use `multiple-additive` to have vanilla clicks
+add to the selection (and remove when the item is already selected).
 
-
-## The `selectionModelOptionsProvider`
-
-Use the `selectionModelOptionsProvider` in your module's `config` method to set
-global options.
-
-```javascript
-myApp.config(function(selectionModelOptionsProvider) {
-  selectionModelOptionsProvider.set({
-    selectedAttribute: 'mySelectedObjectAttribute',
-    selectedClass: 'my-selected-dom-node',
-    type: 'checkbox',
-    model: 'multiple-additive'
-  });
-});
+```html
+<table>
+  <tr ng-repeat="item in fancy.stuff"
+      selection-model
+      selection-model-mode="multiple-additive">
+    <td><input type="checkbox"></td>
+    <td>{{$index+1}}</td>
+    <td>{{item.label}}</td>
+  </tr>
+</table>
 ```
 
 
@@ -122,7 +120,7 @@ myApp.config(function(selectionModelOptionsProvider) {
 Type: `Array`
 Default: `undefined`
 
-If used this should resolve to an (initially empty) array.  The directive will
+If used this should resolve to an initially empty array.  The directive will
 keep the contents of that array up to date with the selection in your
 collection. Note that this is a **read only** list. Adding items will have no
 effect on your collection - and order is not guarenteed.
@@ -159,6 +157,26 @@ In your view
   </p>
 </div>
 ```
+
+
+## Providing Configuration
+
+### The `selectionModelOptionsProvider`
+
+Use the `selectionModelOptionsProvider` in your module's `config` method to set
+global options.
+
+```javascript
+myApp.config(function(selectionModelOptionsProvider) {
+  selectionModelOptionsProvider.set({
+    selectedAttribute: 'mySelectedObjectAttribute',
+    selectedClass: 'my-selected-dom-node',
+    type: 'checkbox',
+    model: 'multiple-additive'
+  });
+});
+```
+
 
 ## Even more...
 
