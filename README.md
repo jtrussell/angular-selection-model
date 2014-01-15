@@ -182,6 +182,22 @@ myApp.config(function(selectionModelOptionsProvider) {
 Check out the docs (as soon as I hit the codebase with dox that is...)
 
 
+## Limitations
+
+- You must use the single parent form of ngRepeat. I.e. if you're trying to use
+  this module with `ng-repeat-start` and `ng-repeat-end` you won't have much
+  joy.
+- ngRepeat expressions that break reference to items in your collection are not
+  supported. If your express looks like `'item in array | pluck:attributesHash'`
+  you won't have much joy. I.e. at the end of the day `'item'` should be an
+  actual element in `'array'`.
+- This directive works by reading from and assigning to an attribute on the
+  items in your collection. If you are worried about polluting your items'
+  attributes consider using the selectionModelOptions provider to make the
+  attribute more obscure or wrapping your items in something like `{selected:
+  false, payload: item}`.
+
+
 ## Running tests
 
 Install dependencies with `npm` and `bower` then run `grunt test`. You'll need
@@ -196,6 +212,8 @@ the `grunt-cli` module installed globally.
 
 ## Release history
 
+- 2014-01-15 v0.4.1 Correctly remove filtered out elements from selected items
+  list
 - 2014-01-10 v0.4.0 Expose read only list of selected items
 - 2014-01-08 v0.3.0 Add `selectionModelOptionsProvider` for global configuration
 - 2013-12-30 v0.2.0 Add new mode `'multi-additive'`.
