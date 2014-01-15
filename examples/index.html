@@ -53,8 +53,17 @@
       <h2>Basic List with Filter</h2>
       <input ng-model="querystr" type="text" />
       <ul>
-        <li ng-repeat="item in ex2.items | filter:querystr" selection-model>
+        <li ng-repeat="item in ex2.items | filter:querystr"
+            selection-model
+            selection-model-selected-items="ex2.selectedItems">
           {{$index+1}} <strong>{{item.label}}</strong> ({{item.value}})
+        </li>
+      </ul>
+
+      <h3>Selected items</h3>
+      <ul>
+        <li ng-repeat="item in ex2.selectedItems">
+          {{item.label}}
         </li>
       </ul>
     </div>
