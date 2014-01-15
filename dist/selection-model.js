@@ -162,6 +162,9 @@ angular.module('selectionModel').directive('selectionModel', [
           angular.forEach(getAllItems(), function(item) {
             item[selectedAttribute] = false;
           });
+          if(angular.isArray(selectedItemsList)) {
+            selectedItemsList.length = 0;
+          }
         };
 
         var selectItemsBetween = function(lastItem) {
