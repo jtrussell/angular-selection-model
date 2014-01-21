@@ -90,6 +90,15 @@ ul.fancy li {
 }
 
 ul.fancy li.selected {
-  color: white;
+  color: lavenderblush;
   background-color: #428BCA;
+}
+
+table.super-fancy td {
+  cursor: pointer;
+}
+
+table.super-fancy tr.foobar {
+  color: white;
+  background-image: url('img/29.png'), url('img/53.png'), url('img/79.png');
 }

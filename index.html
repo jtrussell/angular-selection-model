@@ -39,14 +39,16 @@
         <p class="lead">Without the extra junk</p>
       </div>
 
-      <h4>Basics</h4>
-      <p>Getting up and running is a snap.</p>
-      <p>Include the <code>selectionModel</code> script on your page and add
+      <h4>The Basics</h4>
+      <p>Getting up and running is a snap. Include the
+      <code>selectionModel</code> script on your page and add
       it as a depedency to your angular app. </p>
       <p>The <code>selectionModel</code> directive works with
-      <code>ngRepeat</code> here's a basic example:</p>
+      <code>ngRepeat</code>, it keys in on a boolean attribute on your
+      collection items (configurable) and assigns a css class to selected items
+      in the view (also configurable. Here's a basic example:</p>
       <div class="panel panel-default">
-        <div class="panel-heading">Controller</div>
+        <div class="panel-heading"><h5 class="panel-title">Demo</h5></div>
         <div class="panel-body">
           <h4>Choose something fancy!</h4>
           <div ng-controller="FancyCtrl as fancy">
@@ -84,9 +86,12 @@ myApp.controller('FancyCtrl', function() {
           </div>
         </div>
       </div>
+      <p>That's literally <strong>zero</strong> lines of code to manage the
+      selection. No click handlers. No view helpers.</p>
+      
 
       <div class="marketing row">
-        <h4>More...</h4>
+        <h4>Getting really fancy...</h4>
         <p>There are tons of ways to configure the <code>selectionModel</code>
         directive. You can:</p>
         <ul>
@@ -100,9 +105,74 @@ myApp.controller('FancyCtrl', function() {
         and don't jump through hurdles to skin complex widgets.</p>
       </div>
 
+      <h4>The Kitchen Sink</h4>
+      <p>Here's a more involved example.</p>
+
+      <div class="panel panel-default">
+        <div class="panel-heading"><h5 class="panel-title">Demo</h5></div>
+        <div class="panel-body" ng-controller="FancyCtrl as fancy">
+
+          <form role="form">
+            <div class="form-group">
+              <label>Fancy filter</label>
+              <input type="text" class="form-control" ng-model="fancyfilter" placeholder="Choose your fancy">
+            </div>
+          </form>
+
+          <table class="table super-fancy">
+            <thead>
+              <tr>
+                <th></th>
+                <th>#</th>
+                <th>Label</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tr ng-repeat="item in fancy.bag | filter:fancyfilter"
+                selection-model
+                selection-model-type="checkbox"
+                selection-model-mode="multiple-additive"
+                selection-model-selected-class="foobar">
+              <td><input type="checkbox"></td>
+              <td>{{$index + 1}}</td>
+              <td>{{item.label}}</td>
+              <td>{{item.value}}</td>
+            </tr>
+          </table>
+
+        </div>
+        <div class="panel-footer">
+          <h5>Same controller different view...</h5>
+          <code ng-no-binding><pre>
+  &lt;input type="text" ng-model="fancyfilter" /&gt;
+
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;&lt;/th&gt;
+        &lt;th&gt;#&lt;/th&gt;
+        &lt;th&gt;Label&lt;/th&gt;
+        &lt;th&gt;Value&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tr ng-repeat="item in fancy.bag | filter:fancyfilter"
+        selection-model
+        selection-model-type="checkbox"
+        selection-model-mode="multiple-additive"
+        selection-model-selected-class="foobar"&gt;
+      &lt;td&gt;&lt;input type="checkbox"&gt;&lt;/td&gt;
+      &lt;td&gt;{{$index + 1}}&lt;/td&gt;
+      &lt;td&gt;{{item.label}}&lt;/td&gt;
+      &lt;td&gt;{{item.value}}&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt; </pre></code>
+        </div>
+      </div>
+
       <div class="marketing row">
-        <p>For additinal examples and documentation check out the <a
-          href="https://github.com/jtrussell/angular-selection-model">GitHub repo</a>.</p>
+        <p>Want even more? Check out the <a
+          href="https://github.com/jtrussell/angular-selection-model">GitHub
+        repo</a>.</p>
       </div>
 
       <div class="footer">
