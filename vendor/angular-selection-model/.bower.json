@@ -1,0 +1,43 @@
+{
+  "name": "selection-model",
+  "version": "0.4.0",
+  "authors": [
+    "jtrussell"
+  ],
+  "description": "Selection models for angular tables",
+  "main": "dist/selection-model.js",
+  "keywords": [
+    "table",
+    "selection"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/jtrussell/angular-selection-model.git",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "examples",
+    "src",
+    "package.json",
+    "karma.conf.js",
+    "gruntfile.js"
+  ],
+  "dependencies": {
+    "angular": "~1.2.6"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.2.6"
+  },
+  "_release": "0.4.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.4.0",
+    "commit": "958cf645f0f4ba6a76cd56dcd8305528e13c94de"
+  },
+  "_source": "git://github.com/jtrussell/angular-selection-model.git",
+  "_target": "~0.4.0",
+  "_originalSource": "angular-selection-model",
+  "_direct": true
+}

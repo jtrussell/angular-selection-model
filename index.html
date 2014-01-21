@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A selection model for ngRepeat">
+    <meta name="author" content="jtrussell">
+
+    <title>Angular Selection Model</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="styles.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body ng-app="demo">
+
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="https://github.com/jtrussell/angular-selection-model">GitHub</a></li>
+        </ul>
+        <h3 class="text-muted">Angular Selection Model</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Select Something</h1>
+        <p class="lead">Without the extra junk</p>
+      </div>
+
+      <h4>Basics</h4>
+      <p>Getting up and running is a snap.</p>
+      <p>Include the <code>selectionModel</code> script on your page and add
+      it as a depedency to your angular app. </p>
+      <p>The <code>selectionModel</code> directive works with
+      <code>ngRepeat</code> here's a basic example:</p>
+      <div class="panel panel-default">
+        <div class="panel-heading">Controller</div>
+        <div class="panel-body">
+          <h4>Choose something fancy!</h4>
+          <div ng-controller="FancyCtrl as fancy">
+            <ul class="fancy">
+              <li ng-repeat="item in fancy.bag"
+                  selection-model
+                  selection-model-selected-items="fancy.selectedItems">
+                {{$index+1}} {{item.label}}
+              </li>
+            </ul>
+            <p>Someone so fancy <em>would</em> choose the <strong>{{fancy.selectedItems[0].label | lowercase}}</strong>.</p>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <h5>Controller...</h5>
+          <div>
+            <code><pre>
+myApp.controller('FancyCtrl', function() {
+  this.bag = [
+    {label: 'Monacle', selected: false},
+    {label: 'Top Hat', selected: true},
+    {label: 'Mustachio', selected: false},
+    {label: 'Coffee', selected: false}
+  ];
+});</pre></code>
+          </div>
+          <h5>View...</h5>
+          <div>
+            <code ng-non-bindable><pre>
+&lt;ul ng-controller="FancyCtrl as fancy"&gt;
+  &lt;li ng-repeat="item in fancy.bag" selection-model&gt;
+    {{$index+1}} {{item.label}}
+  &lt;/li&gt;
+&lt;/ul&gt;</pre></code>
+          </div>
+        </div>
+      </div>
+
+      <div class="marketing row">
+        <h4>More...</h4>
+        <p>There are tons of ways to configure the <code>selectionModel</code>
+        directive. You can:</p>
+        <ul>
+          <li>Work with multi-selections and checkboxes</li>
+          <li>Programmatically get at and update the selection</li>
+          <li>Use all the usual <code>ngRepeat</code> partners in crime - filters,
+          paging, ... already built into Angular.</li>
+        </ul>
+        <p>The <code>selectionModel</code> directive is built to manage your
+        selections and get out of the way. Use your own list and table styles
+        and don't jump through hurdles to skin complex widgets.</p>
+      </div>
+
+      <div class="marketing row">
+        <p>For additinal examples and documentation check out the <a
+          href="https://github.com/jtrussell/angular-selection-model">GitHub repo</a>.</p>
+      </div>
+
+      <div class="footer">
+        <p class="pull-left">&copy; jtrusell 2013</p>
+        <p class="pull-right">Licensed under the MIT License.</p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.7/angular.min.js" type="text/javascript" charset="utf-8"></script>
+   <script src="vendor/angular-selection-model/dist/selection-model.js" type="text/javascript" charset="utf-8"></script>
+   <script src="scripts.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>
+
