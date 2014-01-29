@@ -38,55 +38,72 @@
         <p class="lead">Without the extra junk</p>
       </div>
 
-      <h4>The Basics</h4>
-      <p>Getting up and running is a snap. Include the
-      <code>selectionModel</code> script on your page and add
-      it as a depedency to your angular app. </p>
-      <p>The <code>selectionModel</code> directive works with
-      <code>ngRepeat</code>, it keys in on a boolean attribute on your
-      collection items (configurable) and assigns a css class to selected items
-      in the view (also configurable). Here's a basic example:</p>
-      <div class="panel panel-default">
-        <div class="panel-heading"><h5 class="panel-title">Demo</h5></div>
-        <div class="panel-body">
-          <h4>Choose something fancy!</h4>
-          <div ng-controller="FancyCtrl as fancy">
-            <ul class="fancy">
-              <li ng-repeat="item in fancy.bag"
-                  selection-model
-                  selection-model-selected-items="fancy.selectedItems">
-                {{$index+1}} {{item.label}}
-              </li>
-            </ul>
-            <p>Someone so fancy <em>would</em> choose the <strong>{{fancy.selectedItems[0].label | lowercase}}</strong>.</p>
-          </div>
-        </div>
-        <div class="panel-footer">
-          <h5>Controller...</h5>
-          <div>
-            <code><pre>
-myApp.controller('FancyCtrl', function() {
-  this.bag = [
-    {label: 'Monacle', selected: false},
-    {label: 'Top Hat', selected: true},
-    {label: 'Mustachio', selected: false},
-    {label: 'Coffee', selected: false}
-  ];
-});</pre></code>
-          </div>
-          <h5>View...</h5>
-          <div>
-            <code ng-non-bindable><pre>
-&lt;ul ng-controller="FancyCtrl as fancy"&gt;
-  &lt;li ng-repeat="item in fancy.bag" selection-model&gt;
-    {{$index+1}} {{item.label}}
-  &lt;/li&gt;
-&lt;/ul&gt;</pre></code>
-          </div>
-        </div>
+      <div class="marketing row">
+        <h4>Hello World</h4>
+        <p>Yeah, there are a bunch of grid and table directives out there
+        already. The <code>selectionModel</code> directive is unique in that it
+        is indifferent to how your data is presented and only concerns itself
+        with tracking which items are (and are not) selected.</p>
+        <p>Want to use a fancy table? Sure. Prefer to work with lists? That
+        works. Just a bunch of <code>div</code>s? That's cool too!
+        <code>selectionModel</code> is just a companion for
+        <code>ngRepeat</code> if you can use <code>ngRepeat</code> to present
+        your data, you can use <code>selectionModel</code> to manage your
+        selection.</p>
+        <p>How about some demos?</p>
       </div>
-      <p>That's literally <strong>zero</strong> lines of code to manage the
-      selection. No click handlers. No view helpers.</p>
+
+      <div class="marketing row">
+        <h4>The Basics</h4>
+        <p>Getting up and running is a snap. Include the
+        <code>selectionModel</code> script on your page and add
+        it as a depedency to your angular app. </p>
+        <p>The <code>selectionModel</code> directive works with
+        <code>ngRepeat</code>, it keys in on a boolean attribute on your
+        collection items (configurable) and assigns a css class to selected items
+        in the view (also configurable). Here's a basic example:</p>
+        <div class="panel panel-default">
+          <div class="panel-heading"><h5 class="panel-title">Demo</h5></div>
+          <div class="panel-body">
+            <h4>Choose something fancy!</h4>
+            <div ng-controller="FancyCtrl as fancy">
+              <ul class="fancy">
+                <li ng-repeat="item in fancy.bag"
+                    selection-model
+                    selection-model-selected-items="fancy.selectedItems">
+                  {{$index+1}} {{item.label}}
+                </li>
+              </ul>
+              <p>Someone so fancy <em>would</em> choose the <strong>{{fancy.selectedItems[0].label | lowercase}}</strong>.</p>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <h5>Controller...</h5>
+            <div>
+              <code><pre>
+  myApp.controller('FancyCtrl', function() {
+    this.bag = [
+      {label: 'Monacle', selected: false},
+      {label: 'Top Hat', selected: true},
+      {label: 'Mustachio', selected: false},
+      {label: 'Coffee', selected: false}
+    ];
+  });</pre></code>
+            </div>
+            <h5>View...</h5>
+            <div>
+              <code ng-non-bindable><pre>
+  &lt;ul ng-controller="FancyCtrl as fancy"&gt;
+    &lt;li ng-repeat="item in fancy.bag" selection-model&gt;
+      {{$index+1}} {{item.label}}
+    &lt;/li&gt;
+  &lt;/ul&gt;</pre></code>
+            </div>
+          </div>
+        </div>
+        <p>That's literally <strong>zero</strong> lines of code to manage the
+        selection. No click handlers. No view helpers.</p>
+      </div>
       
 
       <div class="marketing row">
@@ -169,9 +186,8 @@ myApp.controller('FancyCtrl', function() {
       </div>
 
       <div class="marketing row">
-        <p>Want even more? Check out the <a
-          href="https://github.com/jtrussell/angular-selection-model">GitHub
-        repo</a>.</p>
+        <h4>And Then...</h4>
+        <p>Still want more? Check out the <a href="https://github.com/jtrussell/angular-selection-model">GitHub repo</a>.</p>
       </div>
 
       <div class="footer">
