@@ -20,9 +20,9 @@ So when should you use `selectionModel`? You might consider it if:
 
 - You want to make a list or table selectable but don't need lots extra bells
   and whistles.
-- You'd want a grid/list whose styles painlessly match the rest of your app
+- You want a grid/list whose styles painlessly match the rest of your app.
 - You're making your own fancy grid directive and want to offload selection
-  management
+  management.
 
 Here's a simple example, we'll start with the controller:
 
@@ -152,7 +152,7 @@ In your view
   </ul>
 
   <p>
-    You've selected {{silly.selectedItems.length}} item(1)
+    You've selected {{silly.selectedItems.length}} item(s)
   </p>
 </div>
 ```
