@@ -1,5 +1,4 @@
-/*global describe, beforeEach, it, module, inject, expect */
-/*jshint node:true */
+/*global jQuery, describe, beforeEach, it, module, inject, expect */
 
 describe('Directive: selectionModel', function() {
   'use strict';
@@ -28,9 +27,8 @@ describe('Directive: selectionModel', function() {
     scope.selection = [];
   });
 
-
   describe('basics', function() {
-    var tpl = [
+    var el, tpl = [
       '<ul>',
         '<li ng-repeat="item in bag" selection-model>',
           '{{$index + 1}}: {{item.value}}',
@@ -38,32 +36,39 @@ describe('Directive: selectionModel', function() {
       '</ul>'
     ].join('');
 
+    beforeEach(function() {
+      el = compile(tpl, scope);
+    });
+
     it('should attach a "selected" class to selected items', function() {
-      var el = compile(tpl, scope);
-      expect(ng.element(el.children()[0]).hasClass('selected')).toBe(true);
-      expect(ng.element(el.children()[1]).hasClass('selected')).toBe(false);
+      expect(el.children().first().hasClass('selected')).toBe(true);
+      expect(el.children().last().hasClass('selected')).toBe(false);
     });
 
     it('should respond to scope changes', function() {
-      var el = compile(tpl, scope);
       scope.bag[0].selected = false;
       scope.bag[1].selected = true;
       scope.$apply();
-      expect(ng.element(el.children()[0]).hasClass('selected')).toBe(false);
-      expect(ng.element(el.children()[1]).hasClass('selected')).toBe(true);
+      expect(el.children().first().hasClass('selected')).toBe(false);
+      expect(el.children().last().hasClass('selected')).toBe(true);
     });
 
     it('should force a single selection by default', function() {
-      var el = compile(tpl, scope);
       scope.bag[1].selected = true;
       scope.$apply();
-      expect(ng.element(el.children()[0]).hasClass('selected')).toBe(false);
-      expect(ng.element(el.children()[1]).hasClass('selected')).toBe(true);
+      expect(el.children().first().hasClass('selected')).toBe(false);
+      expect(el.children().last().hasClass('selected')).toBe(true);
+    });
+
+    it('should respond to clicks', function() {
+      el.children().last().click();
+      expect(el.children().first().hasClass('selected')).toBe(false);
+      expect(el.children().last().hasClass('selected')).toBe(true);
     });
   });
 
   describe('with checkboxes', function() {
-    var tpl = [
+    var el, tpl = [
       '<table>',
         '<tbody>',
           '<tr ng-repeat="item in bag" ',
@@ -75,24 +80,25 @@ describe('Directive: selectionModel', function() {
         '</tbody>',
       '</table>'
     ].join('');
+
+    beforeEach(function() {
+      el = compile(tpl, scope);
+    });
     
     it('should set first checkbox values', function() {
-      var el = compile(tpl, scope);
-      expect(
-        ng.element(el.children()[0].children[0].children[0].children[0]).prop('checked')
-      ).toBe(true);
+      expect(el.find('tr').first().find('input').prop('checked')).toBe(true);
+      expect(el.find('tr').last().find('input').prop('checked')).toBe(false);
+    });
 
-      expect(
-        ng.element(el.children()[0].children[1].children[0].children[0]).prop('checked')
-      ).toBe(false);
+    it('should update checkboxes on click events too', function() {
+      el.find('tr').last().click();
+      expect(el.find('tr').first().find('input').prop('checked')).toBe(false);
+      expect(el.find('tr').last().find('input').prop('checked')).toBe(true);
     });
   });
 
-  /**
-   * @todo
-   */
-  describe('with multiselect enabled', function() {
-    var tpl = [
+  describe('with multi mode', function() {
+    var el, tpl = [
       '<ul>',
         '<li ng-repeat="item in bag" ',
             'selection-model ',
@@ -102,7 +108,40 @@ describe('Directive: selectionModel', function() {
       '</ul>'
     ].join('');
 
-    
+    beforeEach(function() {
+      el = compile(tpl, scope);
+    });
+
+    it('should allow multiple selected items', function() {
+      scope.bag[1].selected = true;
+      scope.$apply();
+      expect(el.find('li').first().hasClass('selected')).toBe(true);
+      expect(el.find('li').last().hasClass('selected')).toBe(true);
+    });
+
+    it('should still force single-selection on clicks without shift or ctrl', function() {
+      el.find('li').last().click();
+      expect(el.find('li').first().hasClass('selected')).toBe(false);
+      expect(el.find('li').last().hasClass('selected')).toBe(true);
+    });
+
+    it('should honor ctrl (meta) clicks', function() {
+      var e = jQuery.Event('click', {metaKey: true});
+      el.find('li').last().trigger(e);
+      expect(el.find('li').first().hasClass('selected')).toBe(true);
+      expect(el.find('li').last().hasClass('selected')).toBe(true);
+    });
+
+    /**
+     * @todo shift clicks
+     */
+  });
+
+  /**
+   * @todo
+   */
+  describe('with multi-additive mode', function() {
+    // ...
   });
 
   /**
