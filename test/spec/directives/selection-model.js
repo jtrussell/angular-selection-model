@@ -22,6 +22,7 @@ describe('Directive: selectionModel', function() {
   beforeEach(function() {
     scope.bag = [
       {selected: true, value: 'foo'},
+      {selected: false, value: 'wowza'},
       {selected: false, value: 'bar'}
     ];
     scope.selection = [];
@@ -47,14 +48,14 @@ describe('Directive: selectionModel', function() {
 
     it('should respond to scope changes', function() {
       scope.bag[0].selected = false;
-      scope.bag[1].selected = true;
+      scope.bag[2].selected = true;
       scope.$apply();
       expect(el.children().first().hasClass('selected')).toBe(false);
       expect(el.children().last().hasClass('selected')).toBe(true);
     });
 
     it('should force a single selection by default', function() {
-      scope.bag[1].selected = true;
+      scope.bag[2].selected = true;
       scope.$apply();
       expect(el.children().first().hasClass('selected')).toBe(false);
       expect(el.children().last().hasClass('selected')).toBe(true);
@@ -113,7 +114,7 @@ describe('Directive: selectionModel', function() {
     });
 
     it('should allow multiple selected items', function() {
-      scope.bag[1].selected = true;
+      scope.bag[2].selected = true;
       scope.$apply();
       expect(el.find('li').first().hasClass('selected')).toBe(true);
       expect(el.find('li').last().hasClass('selected')).toBe(true);
@@ -135,13 +136,36 @@ describe('Directive: selectionModel', function() {
     /**
      * @todo shift clicks
      */
+
+    /**
+     * @todo checkboxes clicks should imply ctrl key
+     */
   });
 
-  /**
-   * @todo
-   */
   describe('with multi-additive mode', function() {
-    // ...
+    var el, tpl = [
+      '<ul>',
+        '<li ng-repeat="item in bag" ',
+            'selection-model ',
+            'selection-model-mode="multiple-additive">',
+          '{{item.value}} <input type="checkbox">',
+        '</li>',
+      '</ul>'
+    ].join('');
+
+    beforeEach(function() {
+      el = compile(tpl, scope);
+    });
+
+    it('should not deselect automatically', function() {
+      el.find('li').last().click();
+      expect(el.find('li').first().hasClass('selected')).toBe(true);
+    });
+
+    it('should deselected selected items on click', function() {
+      el.find('li').first().click();
+      expect(el.find('li').first().hasClass('selected')).toBe(false);
+    });
   });
 
   /**
