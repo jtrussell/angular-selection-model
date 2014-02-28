@@ -1,0 +1,29 @@
+{
+  "name": "angular-selection-model-pages",
+  "version": "0.5.1",
+  "homepage": "https://github.com/jtrussell/angular-selection-model",
+  "authors": [
+    "jtrussell"
+  ],
+  "description": "GH Pages for Angular Selection Model",
+  "main": "index.html,scripts.js,styles.css",
+  "keywords": [
+    "grid",
+    "table",
+    "list",
+    "selection"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-selection-model": "~0.5.1"
+  }
+}

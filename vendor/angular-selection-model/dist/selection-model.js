@@ -162,6 +162,9 @@ angular.module('selectionModel').directive('selectionModel', [
           angular.forEach(getAllItems(), function(item) {
             item[selectedAttribute] = false;
           });
+          if(angular.isArray(selectedItemsList)) {
+            selectedItemsList.length = 0;
+          }
         };
 
         var selectItemsBetween = function(lastItem) {
@@ -198,13 +201,25 @@ angular.module('selectionModel').directive('selectionModel', [
          * only selected item.
          *
          * On Mac the `meta` key is treated as `ctrl`.
+         *
+         * Note that when using the `'checkbox'` selection model type clicking
+         * on a checkbox will have no effect on any row other than the one the
+         * checkbox is in.
          */
-        element.on('click', function(event) {
+        var handleClick = function(event) {
           var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
-            , isShiftKeyDown = event.shiftKey;
+            , isShiftKeyDown = event.shiftKey
+            , target = event.target || event.srcElement
+            , isCheckboxClick = 'checkbox' === smType &&
+                'INPUT' === target.tagName &&
+                'checkbox' === target.type;
+
+          if(isCheckboxClick) {
+            event.stopPropagation();
+          }
 
           // Select multiple allows for ranges - use shift key
-          if(isShiftKeyDown && isMultiMode) {
+          if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
             // Use ctrl+shift for additive ranges
             if(!isCtrlKeyDown) {
               deselectAllItems();
@@ -215,7 +230,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           // Use ctrl/shift without multi select to true toggle a row
-          if(isCtrlKeyDown || isShiftKeyDown) {
+          if(isCtrlKeyDown || isShiftKeyDown || isCheckboxClick) {
             var isSelected = !smItem[selectedAttribute];
             if(!isMultiMode) {
               deselectAllItems();
@@ -234,7 +249,15 @@ angular.module('selectionModel').directive('selectionModel', [
           smItem[selectedAttribute] = true;
           selectionStack.push(clickStackId, smItem);
           scope.$apply();
-        });
+        };
+
+        element.on('click', handleClick);
+        if('checkbox' === smType) {
+          var elCb = element.find('input');
+          if(elCb[0] && 'checkbox' === elCb[0].type) {
+            element.find('input').on('click', handleClick);
+          }
+        }
 
         // We might be coming in with a selection
         updateDom();

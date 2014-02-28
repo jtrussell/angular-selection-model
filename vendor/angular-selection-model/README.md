@@ -20,9 +20,9 @@ So when should you use `selectionModel`? You might consider it if:
 
 - You want to make a list or table selectable but don't need lots extra bells
   and whistles.
-- You'd want a grid/list whose styles painlessly match the rest of your app
+- You want a grid/list whose styles painlessly match the rest of your app.
 - You're making your own fancy grid directive and want to offload selection
-  management
+  management.
 
 Here's a simple example, we'll start with the controller:
 
@@ -73,7 +73,7 @@ attributes on your `ngRepeat`ed element.
 ### selectionModelType
 Default: `'basic'`
 
-Supports either `'basic'` or `'checkbox'`. When set to basic the directive will
+Supports either `'basic'` or `'checkbox'`. When set to checkbox the directive will
 look for the first input element in each item (assume it is a checkbox) and
 update its selected status to match the state of the item.
 
@@ -94,27 +94,24 @@ Note that you do not need to manually set the checkbox state.
 ### selectionModelMode
 Default: `'single'`
 
-May be be either `'single'` or `'multiple'` (or `'multi'`). Make use of this
-option to to allow the user select multiple items using their `shift` and `ctrl`
-keys.
+May be be either `'single'`, `'multiple'`, or `'multiple-additive'`. Make use of
+the multi* modes to to allow the user select more than one item at a time.
 
-The behavior of the multi select mode is modeled after ExtJS data grids.
+The behavior of the multi select mode is modeled after ExtJS data grids. By
+default a vanilla click (no `shift` or `ctrl`) will set the entire selection
+to the single item clicked. Use `multiple-additive` to have vanilla clicks
+add to the selection (and remove when the item is already selected).
 
-
-## The `selectionModelOptionsProvider`
-
-Use the `selectionModelOptionsProvider` in your module's `config` method to set
-global options.
-
-```javascript
-myApp.config(function(selectionModelOptionsProvider) {
-  selectionModelOptionsProvider.set({
-    selectedAttribute: 'mySelectedObjectAttribute',
-    selectedClass: 'my-selected-dom-node',
-    type: 'checkbox',
-    model: 'multiple-additive'
-  });
-});
+```html
+<table>
+  <tr ng-repeat="item in fancy.stuff"
+      selection-model
+      selection-model-mode="multiple-additive">
+    <td><input type="checkbox"></td>
+    <td>{{$index+1}}</td>
+    <td>{{item.label}}</td>
+  </tr>
+</table>
 ```
 
 
@@ -122,7 +119,7 @@ myApp.config(function(selectionModelOptionsProvider) {
 Type: `Array`
 Default: `undefined`
 
-If used this should resolve to an (initially empty) array.  The directive will
+If used this should resolve to an initially empty array.  The directive will
 keep the contents of that array up to date with the selection in your
 collection. Note that this is a **read only** list. Adding items will have no
 effect on your collection - and order is not guarenteed.
@@ -155,14 +152,50 @@ In your view
   </ul>
 
   <p>
-    You've selected {{silly.selectedItems.length}} item(1)
+    You've selected {{silly.selectedItems.length}} item(s)
   </p>
 </div>
 ```
 
+
+## Providing Configuration
+
+### The `selectionModelOptionsProvider`
+
+Use the `selectionModelOptionsProvider` in your module's `config` method to set
+global options.
+
+```javascript
+myApp.config(function(selectionModelOptionsProvider) {
+  selectionModelOptionsProvider.set({
+    selectedAttribute: 'mySelectedObjectAttribute',
+    selectedClass: 'my-selected-dom-node',
+    type: 'checkbox',
+    model: 'multiple-additive'
+  });
+});
+```
+
+
 ## Even more...
 
 Check out the docs (as soon as I hit the codebase with dox that is...)
+
+
+## Limitations
+
+- You must use the single parent form of ngRepeat. I.e. if you're trying to use
+  this module with `ng-repeat-start` and `ng-repeat-end` you won't have much
+  joy.
+- ngRepeat expressions that break reference to items in your collection are not
+  supported. If your express looks like `'item in array | pluck:attributesHash'`
+  you won't have much joy. I.e. at the end of the day `'item'` should be an
+  actual element in `'array'`.
+- This directive works by reading from and assigning to an attribute on the
+  items in your collection. If you are worried about polluting your items'
+  attributes consider using the selectionModelOptions provider to make the
+  attribute more obscure or wrapping your items in something like `{selected:
+  false, payload: item}`.
 
 
 ## Running tests
@@ -179,6 +212,9 @@ the `grunt-cli` module installed globally.
 
 ## Release history
 
+- 2014-02-27 v0.5.0 Checkbox clicks should effect no other rows
+- 2014-01-15 v0.4.1 Correctly remove filtered out elements from selected items
+  list
 - 2014-01-10 v0.4.0 Expose read only list of selected items
 - 2014-01-08 v0.3.0 Add `selectionModelOptionsProvider` for global configuration
 - 2013-12-30 v0.2.0 Add new mode `'multi-additive'`.
