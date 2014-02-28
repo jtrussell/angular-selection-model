@@ -103,8 +103,9 @@ describe('Directive: selectionModel', function() {
       '<ul>',
         '<li ng-repeat="item in bag" ',
             'selection-model ',
+            'selection-model-type="checkbox" ',
             'selection-model-mode="multiple">',
-          '{{item.value}} <input type="checkbox">',
+          '<input type="checkbox" /> {{item.value}}',
         '</li>',
       '</ul>'
     ].join('');
@@ -137,9 +138,14 @@ describe('Directive: selectionModel', function() {
      * @todo shift clicks
      */
 
-    /**
-     * @todo checkboxes clicks should imply ctrl key
-     */
+    it('should sandbox checkbox clicks', function() {
+      el.find('li').last().find('input').click();
+      expect(el.find('li').first().hasClass('selected')).toBe(true);
+      expect(el.find('li').last().hasClass('selected')).toBe(true);
+      var e = jQuery.Event('click', {shiftKey: true});
+      el.find('li').first().find('input').trigger(e);
+      expect(jQuery(el.find('li')[1]).hasClass('selected')).toBe(false);
+    });
   });
 
   describe('with multi-additive mode', function() {
