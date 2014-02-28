@@ -238,7 +238,12 @@ angular.module('selectionModel').directive('selectionModel', [
         };
 
         element.on('click', handleClick);
-        element.find('input').on('click', handleClick);
+        if('checkbox' === smType) {
+          var elCb = element.find('input');
+          if(elCb[0] && 'checkbox' === elCb[0].type) {
+            element.find('input').on('click', handleClick);
+          }
+        }
 
         // We might be coming in with a selection
         updateDom();
