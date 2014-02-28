@@ -212,6 +212,7 @@ the `grunt-cli` module installed globally.
 
 ## Release history
 
+- 2014-02-27 v0.5.0 Checkbox clicks should effect no other rows
 - 2014-01-15 v0.4.1 Correctly remove filtered out elements from selected items
   list
 - 2014-01-10 v0.4.0 Expose read only list of selected items
