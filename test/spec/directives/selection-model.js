@@ -138,9 +138,6 @@ describe('Directive: selectionModel', function() {
       expect(scope.selection.length).toBe(2);
     });
 
-    /**
-     * @todo shift clicks
-     */
     it('should honor shift clicks', function() {
         angular.forEach(scope.bag, function(bag){
             bag.selected = false;
@@ -149,7 +146,7 @@ describe('Directive: selectionModel', function() {
         expect(scope.selection.length).toBe(0); //all selections should be cleared
 
         var e = jQuery.Event('click', {shiftKey: true});
-        el.find('li').first().click();  //click first element - no shift
+        el.find('li').first().click(); //click first element - no shift
         el.find('li').last().trigger(e); //click last element with shift
         expect(el.find('li.selected').length).toBe(scope.bag.length);
         expect(scope.selection.length).toBe(scope.bag.length);
@@ -191,20 +188,4 @@ describe('Directive: selectionModel', function() {
     });
   });
 
-  /**
-   * @todo
-   */
-  describe('with selection tracking', function() {
-    var tpl = [
-      '<ul>',
-        '<li ng-repeat="item in bag" ',
-            'selection-model ',
-            'selection-model-mode="multiple"> ',
-            'selection-model-selected-items="selection" ',
-          '{{item.value}} <input type="checkbox">',
-        '</li>',
-      '</ul>'
-    ].join('');
-
-  });
 });
