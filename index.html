@@ -105,6 +105,57 @@
         selection. No click handlers. No view helpers.</p>
       </div>
       
+      <div class="marketing row">
+        <h4>Keeping selections in sync...</h4>
+        <p>
+          Is super easy! You can have the same collection power multiple grids
+          or views and never worry about syncing selections.
+        </p>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h5 class="panel-title">One Collection, Multiple Grids</h5>
+          </div>
+          <div class="panel-body" ng-controller="FancyCtrl as fancy">
+            <h4>Choose something fancy!</h4>
+            <ul class="fancy">
+              <li ng-repeat="item in fancy.bag"
+                  selection-model
+                  selection-model-selected-items="fancy.selectedItems">
+                {{$index+1}} {{item.label}}
+              </li>
+            </ul>
+            <i>Now make it double!</i>
+            <ul class="fancy">
+              <li ng-repeat="item in fancy.bag"
+                  selection-model
+                  selection-model-selected-items="fancy.selectedItems">
+                {{$index+1}} {{item.label}}
+              </li>
+            </ul>
+            <p>
+              Two <strong>{{fancy.selectedItems[0].label}}s</strong>?!?! That's too many!
+            </p>
+          </div>
+          <div class="panel-footer">
+            <h5>Same controller, different view.</h5>
+            <code ng-non-bindable><pre>&lt;ul class="fancy"&gt;
+  &lt;li ng-repeat="item in fancy.bag"
+      selection-model
+      selection-model-selected-items="fancy.selectedItems"&gt;
+    {{$index+1}} {{item.label}}
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ul class="fancy"&gt;
+  &lt;li ng-repeat="item in fancy.bag"
+      selection-model
+      selection-model-selected-items="fancy.selectedItems"&gt;
+    {{$index+1}} {{item.label}}
+  &lt;/li&gt;
+&lt;/ul&gt;</pre></code>
+          </div>
+        </div>
+      </div>
 
       <div class="marketing row">
         <h4>Getting really fancy...</h4>
@@ -158,9 +209,8 @@
 
         </div>
         <div class="panel-footer">
-          <h5>Same controller different view...</h5>
-          <code ng-non-bindable><pre>
-  &lt;input type="text" ng-model="fancyfilter" /&gt;
+          <h5>Same controller, different view.</h5>
+          <code ng-non-bindable><pre>&lt;input type="text" ng-model="fancyfilter" /&gt;
 
   &lt;table&gt;
     &lt;thead&gt;
