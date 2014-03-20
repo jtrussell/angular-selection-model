@@ -222,7 +222,7 @@ angular.module('selectionModel').directive('selectionModel', [
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
             // Use ctrl+shift for additive ranges
             if(!isCtrlKeyDown) {
-              deselectAllItems();
+              scope.$apply(deselectAllItems());
             }
             selectItemsBetween(selectionStack.peek(clickStackId));
             scope.$apply();
@@ -268,6 +268,7 @@ angular.module('selectionModel').directive('selectionModel', [
             deselectAllItems();
             smItem[selectedAttribute] = true;
           }
+
 
           if(angular.isArray(selectedItemsList)) {
             var ixSmItem = selectedItemsList.indexOf(smItem);
@@ -367,15 +368,27 @@ angular.module('selectionModel').service('selectionStack', function() {
 angular.module('selectionModel').service('uuidGen', function() {
   'use strict';
   var exports = {};
+  var uid = ['0', '0', '0'];
 
-  /**
-   * @see http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-   */
   exports.create = function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
+    var index = uid.length;
+    var digit;
+    while (index) {
+      index--;
+      digit = uid[index].charCodeAt(0);
+      if (digit === 57 /*'9'*/ ) {
+        uid[index] = 'A';
+        return uid.join('');
+      }
+      if (digit === 90 /*'Z'*/ ) {
+        uid[index] = '0';
+      } else {
+        uid[index] = String.fromCharCode(digit + 1);
+        return uid.join('');
+      }
+    }
+    uid.unshift('0');
+    return uid.join('');
   };
 
   return exports;
