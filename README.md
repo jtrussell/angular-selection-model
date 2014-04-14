@@ -207,7 +207,12 @@ the `grunt-cli` module installed globally.
 ## Running examples
 
 Install dependencies with `npm` and `bower` then run `grunt server`. You'll need
-the `grunt-cli` module installed globally.
+the `grunt-cli` module installed globally. Run this way the examples will reload
+automatically as you make changes within the examples folder or to the source
+files themselves.
+
+You may also simply open `examples/index.html` with your favorite web browser if
+the whole grunt thing isn't your cup of tea.
 
 
 ## Release history
