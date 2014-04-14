@@ -16,7 +16,10 @@ module.exports = function(grunt) {
       test: 'test/**/*.js'
     },
 
-    clean: ['dist'],
+    clean: {
+      dist: 'dist',
+      examples: 'examples/bower_components/angular-selection-model/*'
+    },
 
     concat: {
       options: {separator: '\n'},
@@ -33,6 +36,18 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      examples: {
+        files: [{
+          expand: true,
+          cwd: 'dist/',
+          src: '*',
+          dest: 'examples/bower_components/angular-selection-model/',
+          filter: 'isFile'
+        }]
+      }
+    },
+
     watch: {
       livereload: {
         options: {
@@ -44,10 +59,10 @@ module.exports = function(grunt) {
     },
 
     connect: {
-      server: {
+       examples: {
         options: {
           port: 9000,
-          base: ['dist', 'bower_components', 'examples'],
+          base: ['examples'],
           livereload: true,
           open: 'http://localhost:9000/index.html'
         }
@@ -77,13 +92,15 @@ module.exports = function(grunt) {
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   // Register tasks
-  grunt.registerTask('server', [
+  grunt.registerTask('serve', [
     'clean',
     'jshint',
     'build',
     'connect',
     'watch'
   ]);
+
+  grunt.registerTask('server', ['serve']);
 
   grunt.registerTask('test', [
     'jshint',
@@ -92,7 +109,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'concat',
-    'uglify'
+    'uglify',
+    'copy'
   ]);
 
   grunt.registerTask('default', [
