@@ -1,5 +1,7 @@
 # Angular Selection Model
 
+[![Build Status](https://travis-ci.org/jtrussell/angular-selection-model.svg?branch=master)](https://travis-ci.org/jtrussell/angular-selection-model)
+
 > Angular directive for managing selections in tables and lists
 
 ## Huh? What about ngGrid, ngTable, or ...
