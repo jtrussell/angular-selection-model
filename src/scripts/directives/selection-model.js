@@ -17,7 +17,8 @@ angular.module('selectionModel').directive('selectionModel', [
           , defaultSelectedAttribute = defaultOptions.selectedAttribute
           , defaultSelectedClass = defaultOptions.selectedClass
           , defaultType = defaultOptions.type
-          , defaultMode = defaultOptions.mode;
+          , defaultMode = defaultOptions.mode
+          , defaultCleanupStrategy = defaultOptions.cleanupStrategy;
 
         /**
          * The selection model type
@@ -65,6 +66,16 @@ angular.module('selectionModel').directive('selectionModel', [
          * default class name.
          */
         var selectedClass = attrs.selectionModelSelectedClass || defaultSelectedClass;
+
+        /**
+         * The cleanup strategy
+         *
+         * How to handle items that are removed from the current view. By
+         * default no action is taken, you may set this to `deselect` to force
+         * items to be deselected when they are filtered away, paged away, or
+         * otherwise no longer visible on the client.
+         */
+        var cleanupStrategy = attrs.selectionModelCleanupStrategy || defaultCleanupStrategy;
 
         /**
          * The list of items
@@ -247,6 +258,14 @@ angular.module('selectionModel').directive('selectionModel', [
 
         // We might be coming in with a selection
         updateDom();
+
+        // If we were given a cleanup strategy then setup a `'$destroy'`
+        // listener on the scope.
+        if('deselect' === cleanupStrategy) {
+          scope.$on('$destroy', function() {
+            smItem[selectedAttribute] = false;
+          });
+        }
 
         scope.$watch(repeatParts[0] + '.' + selectedAttribute, function(newVal, oldVal) {
           // Be mindful of programmatic changes to selected state
