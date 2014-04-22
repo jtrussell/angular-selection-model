@@ -109,13 +109,37 @@ add to the selection (and remove when the item is already selected).
   <tr ng-repeat="item in fancy.stuff"
       selection-model
       selection-model-mode="multiple-additive">
-    <td><input type="checkbox"></td>
     <td>{{$index+1}}</td>
     <td>{{item.label}}</td>
   </tr>
 </table>
 ```
 
+### selectionModelCleanupStrategy
+Default: `'none'`
+
+By default this directive will not change the selected state of your repeated
+over collection items as they come in and out of view. In many cases you may
+want items to be automatically deselected as they are filtered away or the user
+"pages" a grid view. Use `'deselect'` to get this behavior.
+
+Example: John is looking at page 1 of a data grid and selects some items. John
+changes his mind, goes to the second page of data, selects different items and
+then hits the submit button. Using the cleanup strategy `'none'` all items from
+the first page that John left selected would still be selected, with
+the `'deselect'` strategy though those items would have been deselected when he
+changed pages and only the second page items would be selected.
+
+```html
+<table>
+  <tr ng-repeat="item in fancy.stuff"
+      selection-model
+      selection-model-cleanup-strategy="deselect">
+    <td>{{$index+1}}</td>
+    <td>{{item.label}}</td>
+  </tr>
+</table>
+```
 
 ### selectionModelSelectedItems
 Type: `Array`
@@ -173,7 +197,8 @@ myApp.config(function(selectionModelOptionsProvider) {
     selectedAttribute: 'mySelectedObjectAttribute',
     selectedClass: 'my-selected-dom-node',
     type: 'checkbox',
-    model: 'multiple-additive'
+    model: 'multiple-additive',
+    cleanupStrategy: 'deselect'
   });
 });
 ```
