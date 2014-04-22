@@ -1,4 +1,4 @@
-/*global jQuery, describe, beforeEach, it, module, inject, expect */
+/*global jQuery, describe, beforeEach, afterEach, it, module, inject, expect */
 
 describe('Directive: selectionModel', function() {
   'use strict';
@@ -185,6 +185,57 @@ describe('Directive: selectionModel', function() {
     it('should deselected selected items on click', function() {
       el.find('li').first().click();
       expect(el.find('li').first().hasClass('selected')).toBe(false);
+    });
+  });
+
+  describe('cleanup strategy', function() {
+    beforeEach(function() {
+      scope.myFilter = '';
+    });
+  
+    afterEach(function() {
+      delete scope.myFilter;
+    });
+
+    describe('default', function() {
+      var el, tpl = [
+        '<ul>',
+          '<li ng-repeat="item in bag | filter:myFilter"',
+            'selection-model>',
+          '</li>',
+        '</ul>'
+      ].join('\n');
+
+      beforeEach(function() {
+        el = compile(tpl, scope);
+      });
+
+      it('should leave items selected when no longer visible', function() {
+        scope.myFilter = 'dinosaur';
+        scope.$apply();
+        expect(scope.bag[0].selected).toBe(true);
+      });
+    });
+
+    describe('deselect', function() {
+      var el, tpl = [
+        '<ul>',
+          '<li ng-repeat="item in bag | filter:myFilter"',
+            'selection-model',
+            'selection-model-cleanup-strategy="deselect">',
+          '</li>',
+        '</ul>'
+      ].join('\n');
+
+      beforeEach(function() {
+        el = compile(tpl, scope);
+      });
+
+      it('should deselect items that are no longer visible', function() {
+        scope.myFilter = 'dinosaur';
+        scope.$apply();
+        expect(scope.bag[0].selected).toBe(false);
+      });
     });
   });
 
