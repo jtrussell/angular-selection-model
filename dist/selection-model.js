@@ -233,7 +233,7 @@ angular.module('selectionModel').directive('selectionModel', [
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
             // Use ctrl+shift for additive ranges
             if(!isCtrlKeyDown) {
-              scope.$apply(deselectAllItems());
+              scope.$apply(deselectAllItems);
             }
             selectItemsBetween(selectionStack.peek(clickStackId));
             scope.$apply();
@@ -256,7 +256,8 @@ angular.module('selectionModel').directive('selectionModel', [
 
           // Otherwise the clicked on row becomes the only selected item
           deselectAllItems();
-         
+          scope.$apply();
+
           smItem[selectedAttribute] = true;
           selectionStack.push(clickStackId, smItem);
           scope.$apply();
@@ -287,7 +288,6 @@ angular.module('selectionModel').directive('selectionModel', [
             deselectAllItems();
             smItem[selectedAttribute] = true;
           }
-
 
           if(angular.isArray(selectedItemsList)) {
             var ixSmItem = selectedItemsList.indexOf(smItem);
