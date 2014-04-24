@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 
     clean: {
       dist: 'dist',
-      examples: 'examples/bower_components/angular-selection-model/*'
+      examples: 'examples/vendor/angular-selection-model/*'
     },
 
     concat: {
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
           expand: true,
           cwd: 'dist/',
           src: '*',
-          dest: 'examples/bower_components/angular-selection-model/',
+          dest: 'examples/vendor/angular-selection-model/',
           filter: 'isFile'
         }]
       }
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
         options: {
           livereload: true
         },
-        files: ['src/scripts/**/*.js', 'examples/**/*'],
+        files: ['src/scripts/**/*.js', 'examples/*.{js,html}'],
         tasks: ['jshint', 'build']
       }
     },
