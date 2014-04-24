@@ -239,4 +239,29 @@ describe('Directive: selectionModel', function() {
     });
   });
 
+  describe('selected items list', function() {
+    var el, tpl = [
+      '<ul>',
+        '<li ng-repeat="item in bag" ',
+            'selection-model ',
+            'selection-model-mode="multiple" ',
+            'selection-model-selected-items="selection">',
+        '{{item.value}}',
+        '</li>',
+      '</ul>'
+    ].join('');
+
+    beforeEach(function() {
+      el = compile(tpl, scope);
+    });
+
+    // See issue #13
+    it('should have elements when selected item are clicked again (#13)', function() {
+      el.children().first().click();
+      el.children().first().click();
+      expect(scope.selection.length).toBe(1);
+    });
+    
+  });
+
 });
