@@ -1,6 +1,6 @@
 {
   "name": "selection-model",
-  "version": "0.5.4",
+  "version": "0.6.1",
   "authors": [
     "jtrussell"
   ],
@@ -31,13 +31,14 @@
     "angular-mocks": "~1.2.6",
     "jquery": "~2.1.0"
   },
-  "_release": "0.5.4",
+  "_release": "0.6.1",
   "_resolution": {
     "type": "version",
-    "tag": "v0.5.4",
-    "commit": "51d95fa59dbae8aeea1461021ffb0fe98b6fecab"
+    "tag": "v0.6.1",
+    "commit": "f82a566b43ea49b72a855b9c1bdcd4fe4179d4a9"
   },
   "_source": "git://github.com/jtrussell/angular-selection-model.git",
-  "_target": "~0.5.4",
-  "_originalSource": "angular-selection-model"
+  "_target": "~0.6.1",
+  "_originalSource": "angular-selection-model",
+  "_direct": true
 }

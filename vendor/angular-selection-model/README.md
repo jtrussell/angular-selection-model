@@ -1,5 +1,7 @@
 # Angular Selection Model
 
+[![Build Status](https://travis-ci.org/jtrussell/angular-selection-model.svg?branch=master)](https://travis-ci.org/jtrussell/angular-selection-model)
+
 > Angular directive for managing selections in tables and lists
 
 ## Huh? What about ngGrid, ngTable, or ...
@@ -107,13 +109,37 @@ add to the selection (and remove when the item is already selected).
   <tr ng-repeat="item in fancy.stuff"
       selection-model
       selection-model-mode="multiple-additive">
-    <td><input type="checkbox"></td>
     <td>{{$index+1}}</td>
     <td>{{item.label}}</td>
   </tr>
 </table>
 ```
 
+### selectionModelCleanupStrategy
+Default: `'none'`
+
+By default this directive will not change the selected state of your repeated
+over collection items as they come in and out of view. In many cases you may
+want items to be automatically deselected as they are filtered away or the user
+"pages" a grid view. Use `'deselect'` to get this behavior.
+
+Example: John is looking at page 1 of a data grid and selects some items. John
+changes his mind, goes to the second page of data, selects different items and
+then hits the submit button. Using the cleanup strategy `'none'` all items from
+the first page that John left selected would still be selected, with
+the `'deselect'` strategy though those items would have been deselected when he
+changed pages and only the second page items would be selected.
+
+```html
+<table>
+  <tr ng-repeat="item in fancy.stuff"
+      selection-model
+      selection-model-cleanup-strategy="deselect">
+    <td>{{$index+1}}</td>
+    <td>{{item.label}}</td>
+  </tr>
+</table>
+```
 
 ### selectionModelSelectedItems
 Type: `Array`
@@ -171,7 +197,8 @@ myApp.config(function(selectionModelOptionsProvider) {
     selectedAttribute: 'mySelectedObjectAttribute',
     selectedClass: 'my-selected-dom-node',
     type: 'checkbox',
-    model: 'multiple-additive'
+    model: 'multiple-additive',
+    cleanupStrategy: 'deselect'
   });
 });
 ```
@@ -207,7 +234,12 @@ the `grunt-cli` module installed globally.
 ## Running examples
 
 Install dependencies with `npm` and `bower` then run `grunt server`. You'll need
-the `grunt-cli` module installed globally.
+the `grunt-cli` module installed globally. Run this way the examples will reload
+automatically as you make changes within the examples folder or to the source
+files themselves.
+
+You may also simply open `examples/index.html` with your favorite web browser if
+the whole grunt thing isn't your cup of tea.
 
 
 ## Release history

@@ -1,6 +1,6 @@
 {
   "name": "angular-selection-model-pages",
-  "version": "0.5.4",
+  "version": "0.6.1",
   "homepage": "https://github.com/jtrussell/angular-selection-model",
   "authors": [
     "jtrussell"
@@ -24,6 +24,9 @@
     "tests"
   ],
   "dependencies": {
-    "angular-selection-model": "~0.5.4"
+    "angular-selection-model": "~0.6.1"
+  },
+  "resolutions": {
+    "angular-selection-model": "~0.6.1"
   }
 }
