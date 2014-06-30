@@ -263,6 +263,26 @@ angular.module('selectionModel').directive('selectionModel', [
           scope.$apply();
         };
 
+        /**
+         * Routine to keep the list of selected items up to date
+         *
+         * Adds/removes this item from `selectionModelSelectedItems`.
+         */
+        var updateSelectedItemsList = function() {
+          if(angular.isArray(selectedItemsList)) {
+            var ixSmItem = selectedItemsList.indexOf(smItem);
+            if(smItem[selectedAttribute]) {
+              if(-1 === ixSmItem) {
+                selectedItemsList.push(smItem);
+              }
+            } else {
+              if(-1 < ixSmItem) {
+                selectedItemsList.splice(ixSmItem, 1);
+              }
+            }
+          }
+        };
+
         element.on('click', handleClick);
         if('checkbox' === smType) {
           var elCb = element.find('input');
@@ -279,6 +299,7 @@ angular.module('selectionModel').directive('selectionModel', [
         if('deselect' === cleanupStrategy) {
           scope.$on('$destroy', function() {
             smItem[selectedAttribute] = false;
+            updateSelectedItemsList();
           });
         }
 
@@ -288,20 +309,7 @@ angular.module('selectionModel').directive('selectionModel', [
             deselectAllItems();
             smItem[selectedAttribute] = true;
           }
-
-          if(angular.isArray(selectedItemsList)) {
-            var ixSmItem = selectedItemsList.indexOf(smItem);
-            if(smItem[selectedAttribute]) {
-              if(-1 === ixSmItem) {
-                selectedItemsList.push(smItem);
-              }
-            } else {
-              if(-1 < ixSmItem) {
-                selectedItemsList.splice(ixSmItem, 1);
-              }
-            }
-          }
-
+          updateSelectedItemsList();
           updateDom();
         });
       }
