@@ -222,6 +222,7 @@ describe('Directive: selectionModel', function() {
         '<ul>',
           '<li ng-repeat="item in bag | filter:myFilter"',
             'selection-model',
+            'selection-model-selected-items="selection"',
             'selection-model-cleanup-strategy="deselect">',
           '</li>',
         '</ul>'
@@ -235,6 +236,12 @@ describe('Directive: selectionModel', function() {
         scope.myFilter = 'dinosaur';
         scope.$apply();
         expect(scope.bag[0].selected).toBe(false);
+      });
+
+      it('should remove non-visible items from list of selected items', function() {
+        scope.myFilter = 'dinosaur';
+        scope.$apply();
+        expect(scope.selection.length).toBe(0);
       });
     });
   });
