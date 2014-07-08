@@ -183,6 +183,42 @@ In your view
 </div>
 ```
 
+### selectionModelOnChange
+Type: `Expression`
+Default: `undefined`
+
+Use this attribute to register a callback for when the selected state of a
+collection item **changes**.
+
+In your controller:
+
+```javascript
+myApp.controller('SillyCtrl', function() {
+  this.items = [ /* a bunch of stuff */ ];
+  this.changed = function(item) {
+    // Do something with item, it's selected status has changed!
+  }
+});
+```
+
+In your view:
+
+```html
+<div ng-controller="SillyCtrl as silly">
+  <ul>
+    <li ng-repeat="item in silly.items"
+        selection-model
+        selection-model-mode="multiple-additive"
+        selection-model-on-change="changed(item)">
+      Click me!
+    </li>
+  </ul>
+
+  <p>
+    You've selected {{silly.selectedItems.length}} item(s)
+  </p>
+</div>
+```
 
 ## Providing Configuration
 
@@ -244,6 +280,7 @@ the whole grunt thing isn't your cup of tea.
 
 ## Release history
 
+- 2014-07-08 v0.7.0 Added support `selectionModelOnChange` attribute
 - 2014-02-27 v0.5.0 Checkbox clicks should affect no other rows
 - 2014-01-15 v0.4.1 Correctly remove filtered out elements from selected items
   list

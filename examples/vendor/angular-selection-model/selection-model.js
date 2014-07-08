@@ -92,6 +92,13 @@ angular.module('selectionModel').directive('selectionModel', [
         var cleanupStrategy = attrs.selectionModelCleanupStrategy || defaultCleanupStrategy;
 
         /**
+         * The change callback
+         *
+         * To be executed whenever the item's selected state changes.
+         */
+        var smOnChange = attrs.selectionModelOnChange;
+
+        /**
          * The list of items
          *
          * selectionModel must be attached to the same element as an ngRepeat
@@ -169,13 +176,44 @@ angular.module('selectionModel').directive('selectionModel', [
           return scope.$eval(repeatParts[1].split('|')[0]);
         };
 
-        var deselectAllItems = function() {
-          angular.forEach(getAllItems(), function(item) {
-            item[selectedAttribute] = false;
-          });
-          if(angular.isArray(selectedItemsList)) {
+        // Get us back to a "clean" state. Usually we'll want to skip
+        // deselection for items that are about to be selected again to avoid
+        // firing the `selection-mode-on-change` handler extra times.
+        //
+        // `except` param may be `undefined` (deselect all the things), a single
+        // item (don't deselect *that* item), or an array of two items (don't
+        // deselect anything between those items inclusively).
+        var deselectAllItemsExcept = function(except) {
+          var useSelectedArray = angular.isArray(selectedItemsList)
+            , isRange = angular.isArray(except) && 2 === except.length
+            , allItems = getAllItems()
+            , numItemsFound = 0
+            , doDeselect = false
+            , ixItem;
+          if(useSelectedArray) {
             selectedItemsList.length = 0;
           }
+          angular.forEach(allItems, function(item) {
+            if(isRange) {
+              ixItem = except.indexOf(item);
+              if(ixItem > -1) {
+                numItemsFound++;
+                doDeselect = false;
+                except.splice(ixItem, 1);
+              } else {
+                doDeselect = 1 !== numItemsFound;
+              }
+            } else {
+              doDeselect = item !== except;
+            }
+            if(doDeselect) {
+              item[selectedAttribute] = false;
+            } else {
+              if(useSelectedArray && item[selectedAttribute]) {
+                selectedItemsList.push(item);
+              }
+            }
+          });
         };
 
         var selectItemsBetween = function(lastItem) {
@@ -233,7 +271,9 @@ angular.module('selectionModel').directive('selectionModel', [
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
             // Use ctrl+shift for additive ranges
             if(!isCtrlKeyDown) {
-              scope.$apply(deselectAllItems);
+              scope.$apply(function() {
+                deselectAllItemsExcept([smItem, selectionStack.peek(clickStackId)]);
+              });
             }
             selectItemsBetween(selectionStack.peek(clickStackId));
             scope.$apply();
@@ -244,7 +284,7 @@ angular.module('selectionModel').directive('selectionModel', [
           if(isCtrlKeyDown || isShiftKeyDown || isCheckboxClick) {
             var isSelected = !smItem[selectedAttribute];
             if(!isMultiMode) {
-              deselectAllItems();
+              deselectAllItemsExcept(smItem);
             }
             smItem[selectedAttribute] = isSelected;
             if(smItem[selectedAttribute]) {
@@ -255,7 +295,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           // Otherwise the clicked on row becomes the only selected item
-          deselectAllItems();
+          deselectAllItemsExcept(smItem);
           scope.$apply();
 
           smItem[selectedAttribute] = true;
@@ -293,24 +333,35 @@ angular.module('selectionModel').directive('selectionModel', [
 
         // We might be coming in with a selection
         updateDom();
+        updateSelectedItemsList();
 
         // If we were given a cleanup strategy then setup a `'$destroy'`
         // listener on the scope.
         if('deselect' === cleanupStrategy) {
           scope.$on('$destroy', function() {
+            var oldSelectedStatus = smItem[selectedAttribute];
             smItem[selectedAttribute] = false;
             updateSelectedItemsList();
+            if(smOnChange && oldSelectedStatus) {
+              scope.$eval(smOnChange);
+            }
           });
         }
 
         scope.$watch(repeatParts[0] + '.' + selectedAttribute, function(newVal, oldVal) {
           // Be mindful of programmatic changes to selected state
-          if(!isMultiMode && newVal && !oldVal) {
-            deselectAllItems();
-            smItem[selectedAttribute] = true;
+          if(newVal !== oldVal) {
+            if(!isMultiMode && newVal && !oldVal) {
+              deselectAllItemsExcept(smItem);
+              smItem[selectedAttribute] = true;
+            }
+            updateDom();
+            updateSelectedItemsList();
+
+            if(smOnChange) {
+              scope.$eval(smOnChange);
+            }
           }
-          updateSelectedItemsList();
-          updateDom();
         });
       }
     };

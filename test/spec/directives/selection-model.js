@@ -1,4 +1,4 @@
-/*global jQuery, describe, beforeEach, afterEach, it, module, inject, expect */
+/*global jQuery, describe, beforeEach, afterEach, it, module, inject, expect, iit */
 
 describe('Directive: selectionModel', function() {
   'use strict';
@@ -26,16 +26,26 @@ describe('Directive: selectionModel', function() {
       {selected: false, value: 'bar'}
     ];
     scope.selection = [];
+    scope.record = [];
+    scope.callback = function(item) {
+      if(item.selected) {
+        scope.record.push(item.value);
+      } else {
+        scope.record.push('-' + item.value);
+      }
+    };
   });
 
   describe('basics', function() {
     var el, tpl = [
       '<ul>',
-        '<li ng-repeat="item in bag" selection-model>',
+        '<li ng-repeat="item in bag"',
+            'selection-model',
+            'selection-model-on-change="callback(item)">',
           '{{$index + 1}}: {{item.value}}',
         '</li>',
       '</ul>'
-    ].join('');
+    ].join('\n');
 
     beforeEach(function() {
       el = compile(tpl, scope);
@@ -65,6 +75,13 @@ describe('Directive: selectionModel', function() {
       el.children().last().click();
       expect(el.children().first().hasClass('selected')).toBe(false);
       expect(el.children().last().hasClass('selected')).toBe(true);
+    });
+
+    it('should execute callbacks when selected status changes (single)', function() {
+      el.children().first().click(); // Does nothing
+      el.children().last().click(); // Deselects foo, selects bar
+      el.children().first().click(); // Deselects bar, selects foo
+      expect(scope.record).toEqual(['-foo', 'bar', '-bar', 'foo']);
     });
   });
 
@@ -101,15 +118,16 @@ describe('Directive: selectionModel', function() {
   describe('with multi mode', function() {
     var el, tpl = [
       '<ul>',
-        '<li ng-repeat="item in bag" ',
+        '<li ng-repeat="item in bag"',
             'selection-model ',
-            'selection-model-type="checkbox" ',
-            'selection-model-mode="multiple" ',
-            'selection-model-selected-items="selection">',
+            'selection-model-type="checkbox"',
+            'selection-model-mode="multiple"',
+            'selection-model-selected-items="selection"',
+            'selection-model-on-change="callback(item)">',
         '<input type="checkbox" /> {{item.value}}',
         '</li>',
       '</ul>'
-    ].join('');
+    ].join('\n');
 
     beforeEach(function() {
       el = compile(tpl, scope);
@@ -160,18 +178,35 @@ describe('Directive: selectionModel', function() {
       el.find('li').first().find('input').trigger(e);
       expect(jQuery(el.find('li')[1]).hasClass('selected')).toBe(false);
     });
+
+    it('should only fire callbacks for things that actually changed', function() {
+      scope.bag = [
+        {selected: true, value: 'foo'},
+        {selected: false, value: 'wowza'},
+        {selected: false, value: 'blargus'},
+        {selected: false, value: 'bar'}
+      ];
+      scope.$apply();
+      var eShift = jQuery.Event('click', {shiftKey: true})
+        , eCtrl = jQuery.Event('click', {metaKey: true});
+      el.find('li').eq(1).click(); // Deselects foo, Selects wowza
+      el.find('li').first().trigger(eCtrl); // Select foo
+      el.find('li').last().trigger(eShift); // Shift-selects bar (should not double toggle wowza)
+      expect(scope.record).toEqual(['-foo', 'wowza', 'foo', 'blargus', 'bar']);
+    });
   });
 
   describe('with multi-additive mode', function() {
     var el, tpl = [
       '<ul>',
-        '<li ng-repeat="item in bag" ',
+        '<li ng-repeat="item in bag"',
             'selection-model ',
+            'selection-model-on-change="callback(item)"',
             'selection-model-mode="multiple-additive">',
           '{{item.value}} <input type="checkbox">',
         '</li>',
       '</ul>'
-    ].join('');
+    ].join('\n');
 
     beforeEach(function() {
       el = compile(tpl, scope);
@@ -185,6 +220,22 @@ describe('Directive: selectionModel', function() {
     it('should deselected selected items on click', function() {
       el.find('li').first().click();
       expect(el.find('li').first().hasClass('selected')).toBe(false);
+    });
+
+    it('should only fire callbacks for things that actually changed', function() {
+      scope.bag = [
+        {selected: true, value: 'foo'},
+        {selected: false, value: 'wowza'},
+        {selected: false, value: 'blargus'},
+        {selected: false, value: 'bar'}
+      ];
+      scope.$apply();
+      var e = jQuery.Event('click', {shiftKey: true});
+      el.find('li').first().click(); // Deselects foo
+      el.find('li').eq(1).click(); // Selects wowza
+      el.find('li').first().click(); // Select foo
+      el.find('li').last().trigger(e); // Shift-selects bar (should not double toggle wowza)
+      expect(scope.record).toEqual(['-foo', 'wowza', 'foo', 'blargus', 'bar']);
     });
   });
 
