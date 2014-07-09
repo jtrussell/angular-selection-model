@@ -196,7 +196,7 @@ In your controller:
 myApp.controller('SillyCtrl', function() {
   this.items = [ /* a bunch of stuff */ ];
   this.changed = function(item) {
-    // Do something with item, it's selected status has changed!
+    // Do something with item, its selected status has changed!
   }
 });
 ```
@@ -209,7 +209,7 @@ In your view:
     <li ng-repeat="item in silly.items"
         selection-model
         selection-model-mode="multiple-additive"
-        selection-model-on-change="changed(item)">
+        selection-model-on-change="silly.changed(item)">
       Click me!
     </li>
   </ul>
