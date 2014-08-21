@@ -280,7 +280,7 @@ myApp.config(function(selectionModelOptionsProvider) {
 Check out the docs (as soon as I hit the codebase with dox that is...)
 
 
-## Limitations
+## Limitations and common pitfalls
 
 - You must use the single parent form of ngRepeat. I.e. if you're trying to use
   this module with `ng-repeat-start` and `ng-repeat-end` you won't have much
@@ -294,6 +294,12 @@ Check out the docs (as soon as I hit the codebase with dox that is...)
   attributes consider using the selectionModelOptions provider to make the
   attribute more obscure or wrapping your items in something like `{selected:
   false, payload: item}`.
+- At present `selection-model` listens for clicks *anywhere* on the repeated
+  element. If you have a child element that programmatically changes your
+  collection item's selected state when clicked you may end up bumping heads
+  with `selection-model`. Be wary of this when it seems like your selection is
+  not changing and you have your own click handlers registered to change the
+  selection.
 
 
 ## Running tests
