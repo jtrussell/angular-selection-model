@@ -73,9 +73,9 @@ You can customize the behavior of your selection model by setting different
 attributes on your `ngRepeat`ed element.
 
 ### selectionModelType
-Default: `'basic'`
+Default: `basic`
 
-Supports either `'basic'` or `'checkbox'`. When set to checkbox the directive will
+Supports either `basic` or `checkbox`. When set to checkbox the directive will
 look for the first input element in each item (assume it is a checkbox) and
 update its selected status to match the state of the item.
 
@@ -94,9 +94,9 @@ update its selected status to match the state of the item.
 Note that you do not need to manually set the checkbox state.
 
 ### selectionModelMode
-Default: `'single'`
+Default: `single`
 
-May be be either `'single'`, `'multiple'`, or `'multiple-additive'`. Make use of
+May be be either `single`, `multiple`, or `multiple-additive`. Make use of
 the multi* modes to to allow the user select more than one item at a time.
 
 The behavior of the multi select mode is modeled after ExtJS data grids. By
@@ -115,19 +115,54 @@ add to the selection (and remove when the item is already selected).
 </table>
 ```
 
+### selectionModelSelectedAttribute
+Default: `selected`
+
+The collection attribute used to track the selected status of your collection
+items. Note that you can set this globally using
+`selectionModelOptionsProvider`.
+
+```html
+<ul>
+  <li ng-repeat="item in fancy.stuff"
+      selection-model
+      selection-model-selected-attribute="checked">
+    <!-- Now selection-model will use `item.checked` instead of `item.selected` -->
+    {{item.label}}
+  </li>
+</ul>
+```
+
+### selectionModelSelectedClass
+Default: `selected`
+
+The class name assigned `selection-model` assigns to selected items in your
+view. Note that you can set this globally using `selectionModelOptionsProvider`.
+
+```html
+<ul>
+  <li ng-repeat="item in fancy.stuff"
+      selection-model
+      selection-model-selected-class="checked">
+    <!-- Now selection-model will assign a classname of `checked` to select list items-->
+    {{item.label}}
+  </li>
+</ul>
+```
+
 ### selectionModelCleanupStrategy
-Default: `'none'`
+Default: `none`
 
 By default this directive will not change the selected state of your repeated
 over collection items as they come in and out of view. In many cases you may
 want items to be automatically deselected as they are filtered away or the user
-"pages" a grid view. Use `'deselect'` to get this behavior.
+"pages" a grid view. Use `deselect` to get this behavior.
 
 Example: John is looking at page 1 of a data grid and selects some items. John
 changes his mind, goes to the second page of data, selects different items and
-then hits the submit button. Using the cleanup strategy `'none'` all items from
+then hits the submit button. Using the cleanup strategy `none` all items from
 the first page that John left selected would still be selected, with
-the `'deselect'` strategy though those items would have been deselected when he
+the `deselect` strategy though those items would have been deselected when he
 changed pages and only the second page items would be selected.
 
 ```html
@@ -286,7 +321,7 @@ the whole grunt thing isn't your cup of tea.
   list
 - 2014-01-10 v0.4.0 Expose read only list of selected items
 - 2014-01-08 v0.3.0 Add `selectionModelOptionsProvider` for global configuration
-- 2013-12-30 v0.2.0 Add new mode `'multi-additive'`.
+- 2013-12-30 v0.2.0 Add new mode `multi-additive`.
 - 2013-12-30 v0.1.2 Deselect filtered out items.
 - 2013-12-28 v0.1.1 Initial release.
 
