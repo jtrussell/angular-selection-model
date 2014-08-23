@@ -85,6 +85,28 @@ describe('Directive: selectionModel', function() {
     });
   });
 
+  describe('with selectionModelIgnore', function() {
+    var el, tpl = [
+      '<ul>',
+        '<li ng-repeat="item in bag" ',
+            'selection-model>',
+          '{{$index + 1}}: {{item.value}}',
+          '<span selection-model-ignore>Will not change selection!</span>',
+        '</li>',
+      '</ul>'
+    ].join('');
+
+    beforeEach(function() {
+      el = compile(tpl, scope);
+    });
+
+    it('should ignore clicks on selectionModelIgnore elements', function() {
+      el.children().last().find('span').click();
+      expect(scope.bag[0].selected).toBe(true);
+      expect(scope.bag[2].selected).toBe(false);
+    });
+  });
+
   describe('with checkboxes', function() {
     var el, tpl = [
       '<table>',
