@@ -1,4 +1,11 @@
 
+/**
+ * Selection Model - a selection aware companion for ngRepeat
+ *
+ * @package selectionModel
+ * @copyright 2014 Justin Russell, released under the MIT license
+ */
+
 angular.module('selectionModel').directive('selectionModel', [
   'selectionStack', 'uuidGen', 'selectionModelOptions',
   function(selectionStack, uuidGen, selectionModelOptions) {
@@ -242,6 +249,18 @@ angular.module('selectionModel').directive('selectionModel', [
          * checkbox is in.
          */
         var handleClick = function(event) {
+
+          /**
+           * Set by the `selectionModelIgnore` directive
+           *
+           * Use `selectionModelIgnore` to cause `selectionModel` to selectively
+           * ignore clicks on elements. This is useful if you want to manually
+           * change a selection when certain things are clicked.
+           */
+          if(event.selectionModelIgnore) {
+            return;
+          }
+
           var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
             , isShiftKeyDown = event.shiftKey
             , target = event.target || event.srcElement
