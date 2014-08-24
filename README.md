@@ -255,6 +255,32 @@ In your view:
 </div>
 ```
 
+
+## Extras
+
+### selectionModelIgnore
+
+A helper directive you can use to tell `selectionModel` to selectively ignore
+clicks on certain elements. This is useful in cases where you need to manage
+selection changes yourself or you don't selections to change at all (think
+"delete" buttons).
+
+```html
+<div ng-controller="SillyCtrl as silly">
+  <ul>
+    <li ng-repeat="item in silly.items"
+        selection-model
+        selection-model-mode="multiple-additive"
+        selection-model-on-change="silly.changed(item)">
+      Click me!
+      <button selection-model-ignore class="close">
+        &times;
+      </button>
+    </li>
+  </ul>
+```
+
+
 ## Providing Configuration
 
 ### The `selectionModelOptionsProvider`
@@ -299,7 +325,8 @@ Check out the docs (as soon as I hit the codebase with dox that is...)
   collection item's selected state when clicked you may end up bumping heads
   with `selection-model`. Be wary of this when it seems like your selection is
   not changing and you have your own click handlers registered to change the
-  selection.
+  selection. For such cases we provide the `selectionModelIgnore` helper
+  directive.
 
 
 ## Running tests
