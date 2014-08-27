@@ -83,6 +83,28 @@ describe('Directive: selectionModel', function() {
       el.children().first().click(); // Deselects bar, selects foo
       expect(scope.record).toEqual(['-foo', 'bar', '-bar', 'foo']);
     });
+
+    it('should allow opt-in initial selections validation', function() {
+      scope.bag = [
+        {selected: true, value: 'foo'},
+        {selected: true, value: 'wowza'},
+        {selected: true, value: 'bar'}
+      ];
+
+      el = compile([
+        '<ul>',
+          '<li ng-repeat="item in bag"',
+              'selection-model',
+              'selection-model-validate-initial-selection="true"',
+              'selection-model-on-change="callback(item)">',
+            '{{$index + 1}}: {{item.value}}',
+          '</li>',
+        '</ul>'
+      ].join('\n'), scope);
+      expect(scope.bag[0].selected).toBe(true);
+      expect(scope.bag[1].selected).toBe(false);
+      expect(scope.bag[2].selected).toBe(false);
+    });
   });
 
   describe('with checkboxes', function() {
