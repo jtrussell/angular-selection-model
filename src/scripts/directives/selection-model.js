@@ -268,6 +268,30 @@ angular.module('selectionModel').directive('selectionModel', [
                 'INPUT' === target.tagName &&
                 'checkbox' === target.type;
 
+          /**
+           * Guard against label + checkbox clicks
+           *
+           * Clicking a label will cause a click event to also be fired on the
+           * associated input element. If that input is nearby (i.e. under the
+           * selection model element) we'll suppress the click on the label to
+           * avoid duplicate click events.
+           */
+          if('LABEL' === target.tagName) {
+            var labelFor = angular.element(target).attr('for');
+            if(labelFor) {
+              var childInputs = element[0].getElementsByTagName('INPUT'), ix;
+              for(ix = childInputs.length; ix--;) {
+                if(childInputs[ix].id === labelFor) {
+                  return;
+                }
+              }
+            } else if(target.getElementsByTagName('INPUT').length) {
+              // Label has a nested input element, we'll handle the click on
+              // that element
+              return;
+            }
+          }
+
           if(isCheckboxClick) {
             event.stopPropagation();
           }
