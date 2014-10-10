@@ -261,16 +261,18 @@ angular.module('selectionModel').directive('selectionModel', [
             return;
           }
 
+          // Never handle a single click twice.
+          if(event.selectionModelClickHandled) {
+            return;
+          }
+          event.selectionModelClickHandled = true;
+
           var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
             , isShiftKeyDown = event.shiftKey
             , target = event.target || event.srcElement
             , isCheckboxClick = 'checkbox' === smType &&
                 'INPUT' === target.tagName &&
                 'checkbox' === target.type;
-
-          if(isCheckboxClick) {
-            event.stopPropagation();
-          }
 
           // Select multiple allows for ranges - use shift key
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {

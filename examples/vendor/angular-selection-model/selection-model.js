@@ -13,6 +13,41 @@
 angular.module('selectionModel', []);
 
 
+/**
+ * Selection Model Ignore
+ *
+ * For clickable elements that don't directly interact with `selectionModel`.
+ *
+ * Useful for when you want to manually change the selection, or for things like
+ * "delete" buttons that belong under `ngRepeat` but shouldn't select an item
+ * when clicked.
+ *
+ * @package selectionModel
+ * @copyright 2014 Justin Russell, released under the MIT license
+ */
+
+angular.module('selectionModel').directive('selectionModelIgnore', [
+  function() {
+    'use strict';
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        element.on('click', function(event) {
+          event.selectionModelIgnore = true;
+        });
+      }
+    };
+  }
+]);
+
+
+/**
+ * Selection Model - a selection aware companion for ngRepeat
+ *
+ * @package selectionModel
+ * @copyright 2014 Justin Russell, released under the MIT license
+ */
+
 angular.module('selectionModel').directive('selectionModel', [
   'selectionStack', 'uuidGen', 'selectionModelOptions',
   function(selectionStack, uuidGen, selectionModelOptions) {
@@ -256,16 +291,30 @@ angular.module('selectionModel').directive('selectionModel', [
          * checkbox is in.
          */
         var handleClick = function(event) {
+
+          /**
+           * Set by the `selectionModelIgnore` directive
+           *
+           * Use `selectionModelIgnore` to cause `selectionModel` to selectively
+           * ignore clicks on elements. This is useful if you want to manually
+           * change a selection when certain things are clicked.
+           */
+          if(event.selectionModelIgnore) {
+            return;
+          }
+
+          // Never handle a single click twice.
+          if(event.selectionModelClickHandled) {
+            return;
+          }
+          event.selectionModelClickHandled = true;
+
           var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
             , isShiftKeyDown = event.shiftKey
             , target = event.target || event.srcElement
             , isCheckboxClick = 'checkbox' === smType &&
                 'INPUT' === target.tagName &&
                 'checkbox' === target.type;
-
-          if(isCheckboxClick) {
-            event.stopPropagation();
-          }
 
           // Select multiple allows for ranges - use shift key
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
