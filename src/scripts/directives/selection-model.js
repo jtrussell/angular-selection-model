@@ -257,7 +257,7 @@ angular.module('selectionModel').directive('selectionModel', [
            * ignore clicks on elements. This is useful if you want to manually
            * change a selection when certain things are clicked.
            */
-          if(event.selectionModelIgnore) {
+          if(event.selectionModelIgnore || (event.originalEvent && event.originalEvent.selectionModelIgnore)) {
             return;
           }
 

@@ -20,6 +20,19 @@ angular.module('selectionModel').directive('selectionModelIgnore', [
       link: function(scope, element, attrs) {
         element.on('click', function(event) {
           event.selectionModelIgnore = true;
+
+          /**
+           * If jQuery is on the page `event` will actually be a jQuery Event
+           * and other handlers will only get to see a subset of the event
+           * properties that supported by all browsers. Our custom attribute
+           * will be dropped. We need to instead decorate the original event
+           * object.
+           *
+           * @see https://github.com/jtrussell/angular-selection-model/issues/27
+           */
+          if(event.originalEvent) {
+            event.originalEvent.selectionModelIgnore = true;
+          }
         });
       }
     };
