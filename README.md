@@ -348,6 +348,7 @@ the whole grunt thing isn't your cup of tea.
 
 ## Release history
 
+- 2014-10-29 v0.8.3 Don't double count label clicks
 - 2014-07-08 v0.7.0 Added support `selectionModelOnChange` attribute
 - 2014-02-27 v0.5.0 Checkbox clicks should affect no other rows
 - 2014-01-15 v0.4.1 Correctly remove filtered out elements from selected items
