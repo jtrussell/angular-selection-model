@@ -327,6 +327,13 @@ Check out the docs (as soon as I hit the codebase with dox that is...)
   not changing and you have your own click handlers registered to change the
   selection. For such cases we provide the `selectionModelIgnore` helper
   directive.
+- Do not rely on `selection-model` to maintain the state of your collections
+  outside the view. For example, don't mark an item as selected in controller
+  code then send your collection to the backend server expecting
+  `selection-model` to have appropriately deselected other items. Doing so
+  creates an undesireable coupling with angular's digest cycle. Instead, when
+  making manual selection changes, you should take care to make *all* appropriate
+  selections and deselections if you need immediate consistency.
 
 
 ## Running tests
