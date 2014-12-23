@@ -353,6 +353,12 @@ You may also simply open `examples/index.html` with your favorite web browser if
 the whole grunt thing isn't your cup of tea.
 
 
+## Getting Help
+
+Use the tag **angular-selection-model** on Stack Overflow. For quick things I can
+be reached on twitter @jusrussell. A plunk/jsbin/fiddle is worth a thousand words.
+
+
 ## Release history
 
 - 2014-10-29 v0.8.3 Don't double count label clicks
