@@ -353,7 +353,7 @@ You may also simply open `examples/index.html` with your favorite web browser if
 the whole grunt thing isn't your cup of tea.
 
 
-## Getting Help
+## Getting help
 
 Use the tag **angular-selection-model** on Stack Overflow. For quick things I can
 be reached on twitter @jusrussell. A plunk/jsbin/fiddle is worth a thousand words.
