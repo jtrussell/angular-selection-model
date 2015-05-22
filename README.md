@@ -207,7 +207,7 @@ In your view
     <li ng-repeat="item in silly.items"
         selection-model
         selection-model-mode="multiple-additive"
-        selection-model-selected-items="selectedItems">
+        selection-model-selected-items="silly.selectedItems">
       Click me!
     </li>
   </ul>
