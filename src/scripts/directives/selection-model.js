@@ -262,10 +262,13 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           // Never handle a single click twice.
-          if(event.selectionModelClickHandled) {
+          if(event.selectionModelClickHandled || (event.originalEvent && event.originalEvent.selectionModelClickHandled)) {
             return;
           }
           event.selectionModelClickHandled = true;
+          if(event.originalEvent) {
+            event.originalEvent.selectionModelClickHandled = true;
+          }
 
           var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
             , isShiftKeyDown = event.shiftKey
@@ -296,10 +299,6 @@ angular.module('selectionModel').directive('selectionModel', [
               // that element
               return;
             }
-          }
-
-          if(isCheckboxClick) {
-            event.stopPropagation();
           }
 
           // Select multiple allows for ranges - use shift key
