@@ -44,18 +44,21 @@ angular.module('selectionModel').directive('selectionModel', [
         /**
          * The selection mode
          *
-         * Supports 'single', 'multi[ple]', and 'multi[ple]-additive'. Single
-         * mode will only allow one item to be marked as selected at a time.
+         * Supports 'single', 'multi[ple]', 'multi[ple]-additive', and 'multi[ple]-os'.
+         * Single mode will only allow one item to be marked as selected at a time.
          * Vanilla multi mode allows for multiple selectioned items but requires
          * modifier keys to select more than one item at a time. Additive-multi
          * mode allows for multiple items to be selected and will not deselect
-         * other items when a vanilla click is made. Additive multi also allows
+         * other items when a vanilla click is made. Additive-multi also allows
          * for de-selection without a modifier key (think of `'multi-additive'`
-         * as turning every click into a ctrl-click.
+         * as turning every click into a ctrl-click). Os-multi toggles selection
+         * if there is only one item selected, and causes shift selections to
+         * act like ctrl-click).
          */
         var smMode = attrs.selectionModelMode || defaultMode
-          , isMultiMode = /^multi(ple)?(-additive)?$/.test(smMode)
-          , isModeAdditive = /^multi(ple)?-additive/.test(smMode);
+          , isMultiMode = /^multi(ple)?(-additive)?(-os)?$/.test(smMode)
+          , isModeAdditive = /^multi(ple)?-additive/.test(smMode)
+          , isModeOs = /^multi(ple)?-os/.test(smMode);
 
         /**
          * The item attribute to track selected status
@@ -303,11 +306,13 @@ angular.module('selectionModel').directive('selectionModel', [
 
           // Select multiple allows for ranges - use shift key
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
-            // Use ctrl+shift for additive ranges
-            if(!isCtrlKeyDown) {
-              scope.$apply(function() {
-                deselectAllItemsExcept([smItem, selectionStack.peek(clickStackId)]);
-              });
+            if(!isModeOs) {
+              // Use ctrl+shift for additive ranges
+              if(!isCtrlKeyDown) {
+                scope.$apply(function() {
+                  deselectAllItemsExcept([smItem, selectionStack.peek(clickStackId)]);
+                });
+              }
             }
             selectItemsBetween(selectionStack.peek(clickStackId));
             scope.$apply();
@@ -324,6 +329,13 @@ angular.module('selectionModel').directive('selectionModel', [
             if(smItem[selectedAttribute]) {
               selectionStack.push(clickStackId, smItem);
             }
+            scope.$apply();
+            return;
+          }
+
+          // Toggle row if only one item is selected
+          if (isModeOs && smItem[selectedAttribute] && selectedItemsList.length == 1) {
+            smItem[selectedAttribute] = false;
             scope.$apply();
             return;
           }
