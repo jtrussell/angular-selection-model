@@ -334,7 +334,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           // Toggle row if only one item is selected
-          if (isModeOs && smItem[selectedAttribute] && selectedItemsList.length == 1) {
+          if (isModeOs && smItem[selectedAttribute] && selectedItemsList.length === 1) {
             smItem[selectedAttribute] = false;
             scope.$apply();
             return;
