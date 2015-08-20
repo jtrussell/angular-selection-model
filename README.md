@@ -294,7 +294,7 @@ myApp.config(function(selectionModelOptionsProvider) {
     selectedAttribute: 'mySelectedObjectAttribute',
     selectedClass: 'my-selected-dom-node',
     type: 'checkbox',
-    model: 'multiple-additive',
+    mode: 'multiple-additive',
     cleanupStrategy: 'deselect'
   });
 });
