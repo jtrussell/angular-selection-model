@@ -3,7 +3,6 @@
   "version": "0.8.4",
   "description": "Selection model for angularjs, the ngRepeat companion",
   "main": "dist/selection-model.js",
-  "private": true,
   "directories": {
     "test": "test"
   },
