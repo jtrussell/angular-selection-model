@@ -83,6 +83,22 @@ describe('Directive: selectionModel', function() {
       el.children().first().click(); // Deselects bar, selects foo
       expect(scope.record).toEqual(['-foo', 'bar', '-bar', 'foo']);
     });
+
+    // See issue #39
+    it('should allow for assignments in ngRepeat', function() {
+      tpl = [
+        '<ul>',
+          '<li ng-repeat="item in items = (bag | filter:\'wow\')"',
+              'selection-model',
+            '{{$index + 1}}: {{item.value}}',
+          '</li>',
+        '</ul>'
+      ].join('\n');
+      el = compile(tpl, scope);
+      var firstChild = el.children().first()
+        , fn = firstChild.click.bind(firstChild);
+      expect(fn).not.toThrow();
+    });
   });
 
   describe('with checkboxes', function() {
