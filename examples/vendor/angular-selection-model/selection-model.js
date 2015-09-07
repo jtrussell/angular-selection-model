@@ -221,7 +221,7 @@ angular.module('selectionModel').directive('selectionModel', [
         // Strips away filters - this lets us e.g. deselect items that are
         // filtered out
         var getAllItems = function() {
-          return scope.$eval(repeatParts[1].split('|')[0]);
+          return scope.$eval(repeatParts[1].split(/[|=]/)[0]);
         };
 
         // Get us back to a "clean" state. Usually we'll want to skip
