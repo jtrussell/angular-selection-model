@@ -18,7 +18,7 @@ angular.module('selectionModel').directive('selectionModelIgnore', [
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-        element.on('click', function(event) {
+        var ignore = function(event) {
           event.selectionModelIgnore = true;
 
           /**
@@ -32,6 +32,12 @@ angular.module('selectionModel').directive('selectionModelIgnore', [
            */
           if(event.originalEvent) {
             event.originalEvent.selectionModelIgnore = true;
+          }
+        };
+
+        element.on('click', function(event) {
+          if(!attrs.selectionModelIgnore || scope.$eval(attrs.selectionModelIgnore)) {
+            ignore(event);
           }
         });
       }

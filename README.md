@@ -280,6 +280,27 @@ selection changes yourself or you don't selections to change at all (think
   </ul>
 ```
 
+This directive is dynamic, if the value assigned to `selectionModelIgnore` is
+falsey at the time of the click the click will *not* be ignored:
+
+```html
+<div ng-controller="SillyCtrl as silly">
+  <ul>
+    <li ng-repeat="item in silly.items"
+        selection-model
+        selection-model-mode="multiple-additive"
+        selection-model-on-change="silly.changed(item)">
+      Click me!
+      <button selection-model-ignore="false" class="close">
+        &times; (NOT ignored)
+      </button>
+      <button selection-model-ignore="true" class="close">
+        &times; (ignored)
+      </button>
+    </li>
+  </ul>
+```
+
 
 ## Providing Configuration
 

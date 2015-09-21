@@ -36,7 +36,9 @@ describe('Directive: selectionModelIgnore', function() {
     };
   });
 
-  var el, tpl = [
+  var el;
+
+  var tpl = [
     '<ul>',
       '<li ng-repeat="item in bag" ',
           'selection-model>',
@@ -46,14 +48,29 @@ describe('Directive: selectionModelIgnore', function() {
     '</ul>'
   ].join('');
 
-  beforeEach(function() {
-    el = compile(tpl, scope);
-  });
+  var tplDynamic = [
+    '<ul>',
+      '<li ng-repeat="item in bag" ',
+          'selection-model>',
+        '{{$index + 1}}: {{item.value}}',
+        '<span selection-model-ignore="ignore">Will not change selection!</span>',
+      '</li>',
+    '</ul>'
+  ].join('');
 
-  it('should cuase selectionModel to ignore clicks', function() {
+  it('should cause selectionModel to ignore clicks', function() {
+    el = compile(tpl, scope);
     el.children().last().find('span').click();
     expect(scope.bag[0].selected).toBe(true);
     expect(scope.bag[2].selected).toBe(false);
+  });
+
+  it('should be toggle-able', function() {
+    scope.ignore = false;
+    el = compile(tplDynamic, scope);
+    el.children().last().find('span').click();
+    expect(scope.bag[0].selected).toBe(false);
+    expect(scope.bag[2].selected).toBe(true);
   });
 
 });
