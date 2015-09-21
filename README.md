@@ -382,6 +382,7 @@ be reached on twitter @jusrussell. A plunk/jsbin/fiddle is worth a thousand word
 
 ## Release history
 
+- 2015-09-21 v0.9.0 Make `selectionModelIgnore` dynamic
 - 2014-10-29 v0.8.3 Don't double count label clicks
 - 2014-07-08 v0.7.0 Added support `selectionModelOnChange` attribute
 - 2014-02-27 v0.5.0 Checkbox clicks should affect no other rows
