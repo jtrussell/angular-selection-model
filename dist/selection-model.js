@@ -100,7 +100,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * Note that the 'checkbox' type assumes the first input child element
          * will be the checkbox.
          */
-        var smType = attrs.selectionModelType || defaultType;
+        var smType = scope.$eval(attrs.selectionModelType) || defaultType;
 
         /**
          * The selection mode
@@ -114,7 +114,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * for de-selection without a modifier key (think of `'multi-additive'`
          * as turning every click into a ctrl-click.
          */
-        var smMode = attrs.selectionModelMode || defaultMode
+        var smMode = scope.$eval(attrs.selectionModelMode) || defaultMode
           , isMultiMode = /^multi(ple)?(-additive)?$/.test(smMode)
           , isModeAdditive = /^multi(ple)?-additive/.test(smMode);
 
@@ -124,7 +124,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * Use `selection-model-selected-attribute` to override the default
          * attribute.
          */
-        var selectedAttribute = attrs.selectionModelSelectedAttribute || defaultSelectedAttribute;
+        var selectedAttribute = scope.$eval(attrs.selectionModelSelectedAttribute) || defaultSelectedAttribute;
 
         /**
          * The selected class name
@@ -133,7 +133,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * selected items. Use `selection-model-selected-class` to override the
          * default class name.
          */
-        var selectedClass = attrs.selectionModelSelectedClass || defaultSelectedClass;
+        var selectedClass = scope.$eval(attrs.selectionModelSelectedClass) || defaultSelectedClass;
 
         /**
          * The cleanup strategy
@@ -143,7 +143,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * items to be deselected when they are filtered away, paged away, or
          * otherwise no longer visible on the client.
          */
-        var cleanupStrategy = attrs.selectionModelCleanupStrategy || defaultCleanupStrategy;
+        var cleanupStrategy = scope.$eval(attrs.selectionModelCleanupStrategy) || defaultCleanupStrategy;
 
         /**
          * The change callback
