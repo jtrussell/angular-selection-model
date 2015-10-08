@@ -73,17 +73,18 @@ You can customize the behavior of your selection model by setting different
 attributes on your `ngRepeat`ed element.
 
 ### selectionModelType
-Default: `basic`
+Type: `String`
+Default: ''basic'`
 
-Supports either `basic` or `checkbox`. When set to checkbox the directive will
-look for the first input element in each item (assume it is a checkbox) and
+Supports either `'basic'` or `'checkbox'`. When set to checkbox the directive
+will look for the first input element in each item (assume it is a checkbox) and
 update its selected status to match the state of the item.
 
 ```html
 <table>
   <tr ng-repeat="item in fancy.stuff"
       selection-model
-      selection-model-type="checkbox">
+      selection-model-type="'checkbox'">
     <td><input type="checkbox"></td>
     <td>{{$index+1}}</td>
     <td>{{item.label}}</td>
@@ -94,21 +95,22 @@ update its selected status to match the state of the item.
 Note that you do not need to manually set the checkbox state.
 
 ### selectionModelMode
-Default: `single`
+Type: `String`
+Default: `'single'`
 
-May be be either `single`, `multiple`, or `multiple-additive`. Make use of
+May be be either `'single'`, `'multiple'`, or `'multiple-additive'`. Make use of
 the multi* modes to to allow the user select more than one item at a time.
 
 The behavior of the multi select mode is modeled after ExtJS data grids. By
-default a vanilla click (no `shift` or `ctrl`) will set the entire selection
-to the single item clicked. Use `multiple-additive` to have vanilla clicks
-add to the selection (and remove when the item is already selected).
+default a vanilla click (no `shift` or `ctrl`) will set the entire selection to
+the single item clicked. Use `multiple-additive` to have vanilla clicks add to
+the selection (and remove when the item is already selected).
 
 ```html
 <table>
   <tr ng-repeat="item in fancy.stuff"
       selection-model
-      selection-model-mode="multiple-additive">
+      selection-model-mode="'multiple-additive'">
     <td>{{$index+1}}</td>
     <td>{{item.label}}</td>
   </tr>
@@ -116,7 +118,8 @@ add to the selection (and remove when the item is already selected).
 ```
 
 ### selectionModelSelectedAttribute
-Default: `selected`
+Type: `String`
+Default: `'selected'`
 
 The collection attribute used to track the selected status of your collection
 items. Note that you can set this globally using
@@ -126,7 +129,7 @@ items. Note that you can set this globally using
 <ul>
   <li ng-repeat="item in fancy.stuff"
       selection-model
-      selection-model-selected-attribute="checked">
+      selection-model-selected-attribute="'checked'">
     <!-- Now selection-model will use `item.checked` instead of `item.selected` -->
     {{item.label}}
   </li>
@@ -134,16 +137,17 @@ items. Note that you can set this globally using
 ```
 
 ### selectionModelSelectedClass
-Default: `selected`
+Type: `String`
+Default: `'selected'`
 
-The class name assigned `selection-model` assigns to selected items in your
-view. Note that you can set this globally using `selectionModelOptionsProvider`.
+The class name `selection-model` assigns to selected items in your view. Note
+that you can set this globally using `selectionModelOptionsProvider`.
 
 ```html
 <ul>
   <li ng-repeat="item in fancy.stuff"
       selection-model
-      selection-model-selected-class="checked">
+      selection-model-selected-class="'checked'">
     <!-- Now selection-model will assign a classname of `checked` to select list items-->
     {{item.label}}
   </li>
@@ -151,12 +155,13 @@ view. Note that you can set this globally using `selectionModelOptionsProvider`.
 ```
 
 ### selectionModelCleanupStrategy
-Default: `none`
+Type: `String`
+Default: `'none'`
 
 By default this directive will not change the selected state of your repeated
 over collection items as they come in and out of view. In many cases you may
 want items to be automatically deselected as they are filtered away or the user
-"pages" a grid view. Use `deselect` to get this behavior.
+"pages" a grid view. Use `'deselect'` to get this behavior.
 
 Example: John is looking at page 1 of a data grid and selects some items. John
 changes his mind, goes to the second page of data, selects different items and
@@ -169,7 +174,7 @@ changed pages and only the second page items would be selected.
 <table>
   <tr ng-repeat="item in fancy.stuff"
       selection-model
-      selection-model-cleanup-strategy="deselect">
+      selection-model-cleanup-strategy="'deselect'">
     <td>{{$index+1}}</td>
     <td>{{item.label}}</td>
   </tr>
@@ -206,7 +211,7 @@ In your view
   <ul>
     <li ng-repeat="item in silly.items"
         selection-model
-        selection-model-mode="multiple-additive"
+        selection-model-mode="'multiple-additive'"
         selection-model-selected-items="silly.selectedItems">
       Click me!
     </li>
@@ -243,7 +248,7 @@ In your view:
   <ul>
     <li ng-repeat="item in silly.items"
         selection-model
-        selection-model-mode="multiple-additive"
+        selection-model-mode="'multiple-additive'"
         selection-model-on-change="silly.changed(item)">
       Click me!
     </li>
@@ -270,7 +275,7 @@ selection changes yourself or you don't selections to change at all (think
   <ul>
     <li ng-repeat="item in silly.items"
         selection-model
-        selection-model-mode="multiple-additive"
+        selection-model-mode="'multiple-additive'"
         selection-model-on-change="silly.changed(item)">
       Click me!
       <button selection-model-ignore class="close">
@@ -288,7 +293,7 @@ falsey at the time of the click the click will *not* be ignored:
   <ul>
     <li ng-repeat="item in silly.items"
         selection-model
-        selection-model-mode="multiple-additive"
+        selection-model-mode="'multiple-additive'"
         selection-model-on-change="silly.changed(item)">
       Click me!
       <button selection-model-ignore="false" class="close">
@@ -382,6 +387,7 @@ be reached on twitter @jusrussell. A plunk/jsbin/fiddle is worth a thousand word
 
 ## Release history
 
+- 2015-10-08 v0.10.0 BREAKING CHANGES - see MIGRATING.md
 - 2015-09-21 v0.9.0 Make `selectionModelIgnore` dynamic
 - 2014-10-29 v0.8.3 Don't double count label clicks
 - 2014-07-08 v0.7.0 Added support `selectionModelOnChange` attribute
