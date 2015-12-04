@@ -143,7 +143,12 @@ angular.module('selectionModel').directive('selectionModel', [
           return stackId;
         }());
 
-        var repeatParts = repeatLine.split(' in ')
+        /**
+         * repeatParts[0] -> The item expression
+         * repeatParts[1] -> The collection expression
+         * repeatParts[2] -> The track by expression (if present)
+         */
+        var repeatParts = repeatLine.split(/\sin\s|\strack\sby\s/g)
           , smItem = scope.$eval(repeatParts[0]);
 
         var updateDom = function() {

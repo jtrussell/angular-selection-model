@@ -262,6 +262,39 @@ describe('Directive: selectionModel', function() {
         expect(scope.selection.length).toBe(scope.bag.length);
     });
 
+    /**
+     * @see https://github.com/jtrussell/angular-selection-model/issues/45
+     */
+    it('should honor shift clicks with track-by in ngRepeat', function() {
+      var el, tpl = [
+        '<ul>',
+          '<li ng-repeat="item in bag track by $index"',
+              'selection-model ',
+              'selection-model-type="\'checkbox\'"',
+              'selection-model-mode="\'multiple\'"',
+              'selection-model-selected-items="selection"',
+              'selection-model-on-change="callback(item)">',
+          '<input type="checkbox" /> {{item.value}}',
+          '</li>',
+        '</ul>'
+      ].join('\n');
+
+      el = compile(tpl, scope);
+
+      angular.forEach(scope.bag, function(bag){
+          bag.selected = false;
+      });
+
+      scope.$apply();
+      expect(scope.selection.length).toBe(0); //all selections should be cleared
+
+      var e = jQuery.Event('click', {shiftKey: true});
+      el.find('li').first().click(); //click first element - no shift
+      el.find('li').last().trigger(e); //click last element with shift
+      expect(el.find('li.selected').length).toBe(scope.bag.length);
+      expect(scope.selection.length).toBe(scope.bag.length);
+    });
+
     // I'm not sure why this fails in FF when run with karma... I suspect
     // something to do with this being a fake event? Anyway, doesn't seem to
     // reflect anything measurable in practice?
