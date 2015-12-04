@@ -249,17 +249,17 @@ describe('Directive: selectionModel', function() {
     });
 
     it('should honor shift clicks', function() {
-        angular.forEach(scope.bag, function(bag){
-            bag.selected = false;
-        });
-        scope.$apply();
-        expect(scope.selection.length).toBe(0); //all selections should be cleared
+      angular.forEach(scope.bag, function(bag){
+          bag.selected = false;
+      });
+      scope.$apply();
+      expect(scope.selection.length).toBe(0); //all selections should be cleared
 
-        var e = jQuery.Event('click', {shiftKey: true});
-        el.find('li').first().click(); //click first element - no shift
-        el.find('li').last().trigger(e); //click last element with shift
-        expect(el.find('li.selected').length).toBe(scope.bag.length);
-        expect(scope.selection.length).toBe(scope.bag.length);
+      var e = jQuery.Event('click', {shiftKey: true});
+      el.find('li').first().click(); //click first element - no shift
+      el.find('li').last().trigger(e); //click last element with shift
+      expect(el.find('li.selected').length).toBe(scope.bag.length);
+      expect(scope.selection.length).toBe(scope.bag.length);
     });
 
     /**
