@@ -210,7 +210,8 @@ angular.module('selectionModel').directive('selectionModel', [
          * repeatParts[2] -> The track by expression (if present)
          */
         var repeatParts = repeatLine.split(/\sin\s|\strack\sby\s/g)
-          , smItem = scope.$eval(repeatParts[0]);
+          , smItem = scope.$eval(repeatParts[0])
+          , hasTrackBy = repeatParts.length > 2;
 
         var updateDom = function() {
           if(smItem[selectedAttribute]) {
@@ -463,6 +464,14 @@ angular.module('selectionModel').directive('selectionModel', [
             }
           }
         });
+
+        // If we're using track-by with ngRepeat it's possible the item
+        // reference will change without this directive getting re-linked.
+        if(hasTrackBy) {
+          scope.$watch(repeatParts[0], function(newVal) {
+            smItem = newVal;
+          });
+        }
       }
     };
   }

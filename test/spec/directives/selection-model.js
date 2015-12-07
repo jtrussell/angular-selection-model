@@ -99,6 +99,38 @@ describe('Directive: selectionModel', function() {
         , fn = firstChild.click.bind(firstChild);
       expect(fn).not.toThrow();
     });
+
+    it('should handle refernces changes with track-by', function() {
+      var el, tpl = [
+        '<ul>',
+          '<li ng-repeat="item in bag track by $index"',
+              'selection-model',
+              'selection-model-on-change="callback(item)">',
+            '{{$index + 1}}: {{item.value}}',
+          '</li>',
+        '</ul>'
+      ].join('\n');
+
+      scope.bag = [
+        {selected: false, value: 'foo'},
+        {selected: false, value: 'wowza'},
+        {selected: false, value: 'bar'}
+      ];
+
+      el = compile(tpl, scope);
+
+      scope.bag = [
+        {selected: false, value: 'foo2'},
+        {selected: false, value: 'wowza2'},
+        {selected: false, value: 'bar2'}
+      ];
+
+      scope.$apply();
+
+      el.children().first().click();
+
+      expect(scope.bag[0].selected).toBe(true);
+    });
   });
 
   describe('with checkboxes', function() {
