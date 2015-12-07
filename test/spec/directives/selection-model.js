@@ -100,6 +100,7 @@ describe('Directive: selectionModel', function() {
       expect(fn).not.toThrow();
     });
 
+    // See #46
     it('should handle refernces changes with track-by', function() {
       var el, tpl = [
         '<ul>',
