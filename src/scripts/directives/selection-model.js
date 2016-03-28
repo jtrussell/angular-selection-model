@@ -80,8 +80,8 @@ angular.module('selectionModel').directive('selectionModel', [
          *
          * When to handle the selection. By default the selection is executed
          * only on 'click' event. Other methods can be registered by specifying
-         * them on the selection-model-handle-events attribute. Multiple events
-         * can be registered comma separated.
+         * them on the selection-model-handle-events attribute.
+         * Multiple events can be registered space separated.
          */
         var handleEvents = scope.$eval(attrs.selectionModelHandleEvents) || defaultHandleEvents;
         
