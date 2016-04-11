@@ -27,11 +27,18 @@ angular.module('selectionModel', []);
  */
 
 angular.module('selectionModel').directive('selectionModelIgnore', [
-  function() {
+  'selectionModelOptions',
+  function(selectionModelOptions) {
     'use strict';
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
+        
+        var defaultOptions = selectionModelOptions.get()
+        , defaultHandleEvents = defaultOptions.handleEvents;
+          
+        var handleEvents = scope.$eval(attrs.selectionModelIgnoreEvents) || defaultHandleEvents;
+        
         var ignore = function(event) {
           event.selectionModelIgnore = true;
 
