@@ -56,7 +56,7 @@ angular.module('selectionModel').directive('selectionModelIgnore', [
           }
         };
 
-        element.on('click', function(event) {
+        element.on(handleEvents, function(event) {
           if(!attrs.selectionModelIgnore || scope.$eval(attrs.selectionModelIgnore)) {
             ignore(event);
           }
