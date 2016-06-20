@@ -160,7 +160,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           if('checkbox' === smType) {
-            var cb = element.find('input');
+            var cb = element.find('input').eq(0);
             cb.prop('checked', smItem[selectedAttribute]);
           }
         };
