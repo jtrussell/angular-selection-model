@@ -15,7 +15,8 @@ angular.module('selectionModel').provider('selectionModelOptions', [function() {
     selectedClass: 'selected',
     type: 'basic',
     mode: 'single',
-    cleanupStrategy: 'none'
+    cleanupStrategy: 'none',
+    handleEvents: 'click'
   };
 
   this.set = function(userOpts) {

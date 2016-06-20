@@ -23,6 +23,7 @@ angular.module('selectionModel').directive('selectionModel', [
         var defaultOptions = selectionModelOptions.get()
           , defaultSelectedAttribute = defaultOptions.selectedAttribute
           , defaultSelectedClass = defaultOptions.selectedClass
+          , defaultHandleEvents = defaultOptions.handleEvents
           , defaultType = defaultOptions.type
           , defaultMode = defaultOptions.mode
           , defaultCleanupStrategy = defaultOptions.cleanupStrategy;
@@ -73,7 +74,17 @@ angular.module('selectionModel').directive('selectionModel', [
          * default class name.
          */
         var selectedClass = scope.$eval(attrs.selectionModelSelectedClass) || defaultSelectedClass;
-
+        
+        /**
+         * The selection handler events
+         *
+         * When to handle the selection. By default the selection is executed
+         * only on 'click' event. Other methods can be registered by specifying
+         * them on the selection-model-handle-events attribute.
+         * Multiple events can be registered space separated.
+         */
+        var handleEvents = scope.$eval(attrs.selectionModelHandleEvents) || defaultHandleEvents;
+        
         /**
          * The cleanup strategy
          *
@@ -363,7 +374,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
         };
 
-        element.on('click', handleClick);
+        element.on(handleEvents, handleClick);
         if('checkbox' === smType) {
           var elCb = element.find('input');
           if(elCb[0] && 'checkbox' === elCb[0].type) {

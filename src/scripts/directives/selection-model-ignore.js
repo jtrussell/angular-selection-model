@@ -13,11 +13,18 @@
  */
 
 angular.module('selectionModel').directive('selectionModelIgnore', [
-  function() {
+  'selectionModelOptions',
+  function(selectionModelOptions) {
     'use strict';
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
+        
+        var defaultOptions = selectionModelOptions.get()
+        , defaultHandleEvents = defaultOptions.handleEvents;
+          
+        var handleEvents = scope.$eval(attrs.selectionModelIgnoreEvents) || defaultHandleEvents;
+        
         var ignore = function(event) {
           event.selectionModelIgnore = true;
 
@@ -35,7 +42,7 @@ angular.module('selectionModel').directive('selectionModelIgnore', [
           }
         };
 
-        element.on('click', function(event) {
+        element.on(handleEvents, function(event) {
           if(!attrs.selectionModelIgnore || scope.$eval(attrs.selectionModelIgnore)) {
             ignore(event);
           }

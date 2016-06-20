@@ -27,11 +27,18 @@ angular.module('selectionModel', []);
  */
 
 angular.module('selectionModel').directive('selectionModelIgnore', [
-  function() {
+  'selectionModelOptions',
+  function(selectionModelOptions) {
     'use strict';
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
+        
+        var defaultOptions = selectionModelOptions.get()
+        , defaultHandleEvents = defaultOptions.handleEvents;
+          
+        var handleEvents = scope.$eval(attrs.selectionModelIgnoreEvents) || defaultHandleEvents;
+        
         var ignore = function(event) {
           event.selectionModelIgnore = true;
 
@@ -49,7 +56,7 @@ angular.module('selectionModel').directive('selectionModelIgnore', [
           }
         };
 
-        element.on('click', function(event) {
+        element.on(handleEvents, function(event) {
           if(!attrs.selectionModelIgnore || scope.$eval(attrs.selectionModelIgnore)) {
             ignore(event);
           }
@@ -84,6 +91,7 @@ angular.module('selectionModel').directive('selectionModel', [
         var defaultOptions = selectionModelOptions.get()
           , defaultSelectedAttribute = defaultOptions.selectedAttribute
           , defaultSelectedClass = defaultOptions.selectedClass
+          , defaultHandleEvents = defaultOptions.handleEvents
           , defaultType = defaultOptions.type
           , defaultMode = defaultOptions.mode
           , defaultCleanupStrategy = defaultOptions.cleanupStrategy;
@@ -134,7 +142,17 @@ angular.module('selectionModel').directive('selectionModel', [
          * default class name.
          */
         var selectedClass = scope.$eval(attrs.selectionModelSelectedClass) || defaultSelectedClass;
-
+        
+        /**
+         * The selection handler events
+         *
+         * When to handle the selection. By default the selection is executed
+         * only on 'click' event. Other methods can be registered by specifying
+         * them on the selection-model-handle-events attribute.
+         * Multiple events can be registered space separated.
+         */
+        var handleEvents = scope.$eval(attrs.selectionModelHandleEvents) || defaultHandleEvents;
+        
         /**
          * The cleanup strategy
          *
@@ -424,7 +442,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
         };
 
-        element.on('click', handleClick);
+        element.on(handleEvents, handleClick);
         if('checkbox' === smType) {
           var elCb = element.find('input');
           if(elCb[0] && 'checkbox' === elCb[0].type) {
@@ -494,7 +512,8 @@ angular.module('selectionModel').provider('selectionModelOptions', [function() {
     selectedClass: 'selected',
     type: 'basic',
     mode: 'single',
-    cleanupStrategy: 'none'
+    cleanupStrategy: 'none',
+    handleEvents: 'click'
   };
 
   this.set = function(userOpts) {
