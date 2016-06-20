@@ -240,6 +240,65 @@ describe('Directive: selectionModel', function() {
     });
   });
 
+  describe('with checkboxes and multiple inputs', function() {
+    // See Issue #51
+    it('should only check/uncheck the first input it finds', function() {
+      var tpl = [
+        '<table>',
+          '<tbody>',
+            '<tr ng-repeat="item in bag"',
+                'selection-model',
+                'selection-model-mode="\'multiple\'"',
+                'selection-model-type="\'checkbox\'">',
+              '<td>',
+                '<input type="checkbox">',
+                '<input type="checkbox">',
+                'Hey I am a checkbox label!',
+              '</td>',
+              '<td>{{$index + 1}}: {{item.value}}</td>',
+            '</tr>',
+          '</tbody>',
+        '</table>'
+      ].join('\n');
+
+      var el = compile(tpl, scope);
+      // jQuery's element.click() doesn't cause a click event to fire on the
+      // corresponding input element, we must simulate that ourselves
+      el.find('tr').first().click();
+      expect(el.find('tr').first().find('input').eq(0).prop('checked')).toBe(true);
+      expect(el.find('tr').first().find('input').eq(1).prop('checked')).toBe(false);
+    });
+    
+    it('should treat label clicks as checkbox clicks ("for" labels)', function() {
+      var tpl = [
+        '<table>',
+          '<tbody>',
+            '<tr ng-repeat="item in bag"',
+                'selection-model',
+                'selection-model-mode="\'multiple\'"',
+                'selection-model-type="\'checkbox\'">',
+              '<td>',
+                '<input type="checkbox" id="foo_{{$id}}_{{$index}}">',
+                '<label for="foo_{{$id}}_{{$index}}">',
+                  'Hey I am a checkbox label!',
+                '</label>',
+              '</td>',
+              '<td>{{$index + 1}}: {{item.value}}</td>',
+            '</tr>',
+          '</tbody>',
+        '</table>'
+      ].join('\n');
+
+      var el = compile(tpl, scope);
+      el.find('tr').last().find('label').click();
+      // jQuery's element.click() doesn't cause as click event to fire on the
+      // corresponding input element, we must simulate that ourselves
+      el.find('tr').last().find('input').click();
+      expect(el.find('tr').first().find('input').prop('checked')).toBe(true);
+      expect(el.find('tr').last().find('input').prop('checked')).toBe(true);
+    });
+  });
+
   describe('with multi mode', function() {
     var el, tpl = [
       '<ul>',
