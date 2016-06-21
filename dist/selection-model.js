@@ -229,7 +229,7 @@ angular.module('selectionModel').directive('selectionModel', [
               }
             });
             
-            if (checkboxes && checkboxes.length > 0) {
+            if(checkboxes.length) {
               checkboxes[0].prop('checked', smItem[selectedAttribute]);
             }
           }
