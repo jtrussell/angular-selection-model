@@ -77,8 +77,8 @@ Type: `String`
 Default: ''basic'`
 
 Supports either `'basic'` or `'checkbox'`. When set to checkbox the directive
-will look for the first input element in each item (assume it is a checkbox) and
-update its selected status to match the state of the item.
+will look for the first input element of type checkbox in each item and update
+its selected status to match the state of the item.
 
 ```html
 <table>
