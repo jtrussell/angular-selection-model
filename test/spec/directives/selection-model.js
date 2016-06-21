@@ -241,8 +241,9 @@ describe('Directive: selectionModel', function() {
   });
 
   describe('with checkboxes and multiple inputs', function() {
+
     // See Issue #51
-    it('should only check/uncheck the first input it finds', function() {
+    it('should only check/uncheck the first checkbox input it finds', function() {
       var tpl = [
         '<table>',
           '<tbody>',
@@ -251,8 +252,11 @@ describe('Directive: selectionModel', function() {
                 'selection-model-mode="\'multiple\'"',
                 'selection-model-type="\'checkbox\'">',
               '<td>',
+                '<input type="radio">',
+                '<input type="radio">',
                 '<input type="checkbox">',
                 '<input type="checkbox">',
+                '<input type="text">',
                 'Hey I am a checkbox label!',
               '</td>',
               '<td>{{$index + 1}}: {{item.value}}</td>',
@@ -265,8 +269,11 @@ describe('Directive: selectionModel', function() {
       // jQuery's element.click() doesn't cause a click event to fire on the
       // corresponding input element, we must simulate that ourselves
       el.find('tr').first().click();
-      expect(el.find('tr').first().find('input').eq(0).prop('checked')).toBe(true);
+      expect(el.find('tr').first().find('input').eq(0).prop('checked')).toBe(false);
       expect(el.find('tr').first().find('input').eq(1).prop('checked')).toBe(false);
+      expect(el.find('tr').first().find('input').eq(2).prop('checked')).toBe(true);
+      expect(el.find('tr').first().find('input').eq(3).prop('checked')).toBe(false);
+      expect(el.find('tr').first().find('input').eq(4).prop('checked')).toBe(false);
     });
     
     it('should treat label clicks as checkbox clicks ("for" labels)', function() {

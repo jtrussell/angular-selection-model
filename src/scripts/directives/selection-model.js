@@ -160,8 +160,17 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           if('checkbox' === smType) {
-            var cb = element.find('input').eq(0);
-            cb.prop('checked', smItem[selectedAttribute]);
+            var checkboxes = [];
+            angular.forEach(element.find('input'), function(input) {
+              input = angular.element(input);
+              if (input.attr('type') === 'checkbox') {
+                checkboxes.push(input);
+              }
+            });
+            
+            if (checkboxes && checkboxes.length > 0) {
+              checkboxes[0].prop('checked', smItem[selectedAttribute]);
+            }
           }
         };
 
