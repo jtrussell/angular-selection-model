@@ -197,9 +197,9 @@
             </thead>
             <tr ng-repeat="item in fancy.bag | filter:fancyfilter"
                 selection-model
-                selection-model-type="checkbox"
-                selection-model-mode="multiple-additive"
-                selection-model-selected-class="foobar">
+                selection-model-type="'checkbox'"
+                selection-model-mode="'multiple-additive'"
+                selection-model-selected-class="'foobar'">
               <td><input type="checkbox"></td>
               <td>{{$index + 1}}</td>
               <td>{{item.label}}</td>
@@ -223,9 +223,9 @@
     &lt;/thead&gt;
     &lt;tr ng-repeat="item in fancy.bag | filter:fancyfilter"
         selection-model
-        selection-model-type="checkbox"
-        selection-model-mode="multiple-additive"
-        selection-model-selected-class="foobar"&gt;
+        selection-model-type="'checkbox'"
+        selection-model-mode="'multiple-additive'"
+        selection-model-selected-class="'foobar'"&gt;
       &lt;td&gt;&lt;input type="checkbox"&gt;&lt;/td&gt;
       &lt;td&gt;{{$index + 1}}&lt;/td&gt;
       &lt;td&gt;{{item.label}}&lt;/td&gt;

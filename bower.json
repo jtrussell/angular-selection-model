@@ -24,9 +24,9 @@
     "tests"
   ],
   "dependencies": {
-    "angular-selection-model": "~0.6.1"
+    "angular-selection-model": "^0.11.0"
   },
   "resolutions": {
-    "angular-selection-model": "~0.6.1"
+    "angular-selection-model": "^0.11.0"
   }
 }

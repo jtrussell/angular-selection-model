@@ -13,6 +13,60 @@
 angular.module('selectionModel', []);
 
 
+/**
+ * Selection Model Ignore
+ *
+ * For clickable elements that don't directly interact with `selectionModel`.
+ *
+ * Useful for when you want to manually change the selection, or for things like
+ * "delete" buttons that belong under `ngRepeat` but shouldn't select an item
+ * when clicked.
+ *
+ * @package selectionModel
+ * @copyright 2014 Justin Russell, released under the MIT license
+ */
+
+angular.module('selectionModel').directive('selectionModelIgnore', [
+  function() {
+    'use strict';
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var ignore = function(event) {
+          event.selectionModelIgnore = true;
+
+          /**
+           * If jQuery is on the page `event` will actually be a jQuery Event
+           * and other handlers will only get to see a subset of the event
+           * properties that supported by all browsers. Our custom attribute
+           * will be dropped. We need to instead decorate the original event
+           * object.
+           *
+           * @see https://github.com/jtrussell/angular-selection-model/issues/27
+           */
+          if(event.originalEvent) {
+            event.originalEvent.selectionModelIgnore = true;
+          }
+        };
+
+        element.on('click', function(event) {
+          if(!attrs.selectionModelIgnore || scope.$eval(attrs.selectionModelIgnore)) {
+            ignore(event);
+          }
+        });
+      }
+    };
+  }
+]);
+
+
+/**
+ * Selection Model - a selection aware companion for ngRepeat
+ *
+ * @package selectionModel
+ * @copyright 2014 Justin Russell, released under the MIT license
+ */
+
 angular.module('selectionModel').directive('selectionModel', [
   'selectionStack', 'uuidGen', 'selectionModelOptions',
   function(selectionStack, uuidGen, selectionModelOptions) {
@@ -46,7 +100,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * Note that the 'checkbox' type assumes the first input child element
          * will be the checkbox.
          */
-        var smType = attrs.selectionModelType || defaultType;
+        var smType = scope.$eval(attrs.selectionModelType) || defaultType;
 
         /**
          * The selection mode
@@ -60,7 +114,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * for de-selection without a modifier key (think of `'multi-additive'`
          * as turning every click into a ctrl-click.
          */
-        var smMode = attrs.selectionModelMode || defaultMode
+        var smMode = scope.$eval(attrs.selectionModelMode) || defaultMode
           , isMultiMode = /^multi(ple)?(-additive)?$/.test(smMode)
           , isModeAdditive = /^multi(ple)?-additive/.test(smMode);
 
@@ -70,7 +124,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * Use `selection-model-selected-attribute` to override the default
          * attribute.
          */
-        var selectedAttribute = attrs.selectionModelSelectedAttribute || defaultSelectedAttribute;
+        var selectedAttribute = scope.$eval(attrs.selectionModelSelectedAttribute) || defaultSelectedAttribute;
 
         /**
          * The selected class name
@@ -79,7 +133,7 @@ angular.module('selectionModel').directive('selectionModel', [
          * selected items. Use `selection-model-selected-class` to override the
          * default class name.
          */
-        var selectedClass = attrs.selectionModelSelectedClass || defaultSelectedClass;
+        var selectedClass = scope.$eval(attrs.selectionModelSelectedClass) || defaultSelectedClass;
 
         /**
          * The cleanup strategy
@@ -89,7 +143,14 @@ angular.module('selectionModel').directive('selectionModel', [
          * items to be deselected when they are filtered away, paged away, or
          * otherwise no longer visible on the client.
          */
-        var cleanupStrategy = attrs.selectionModelCleanupStrategy || defaultCleanupStrategy;
+        var cleanupStrategy = scope.$eval(attrs.selectionModelCleanupStrategy) || defaultCleanupStrategy;
+
+        /**
+         * The change callback
+         *
+         * To be executed whenever the item's selected state changes.
+         */
+        var smOnChange = attrs.selectionModelOnChange;
 
         /**
          * The list of items
@@ -143,8 +204,14 @@ angular.module('selectionModel').directive('selectionModel', [
           return stackId;
         }());
 
-        var repeatParts = repeatLine.split(' in ')
-          , smItem = scope.$eval(repeatParts[0]);
+        /**
+         * repeatParts[0] -> The item expression
+         * repeatParts[1] -> The collection expression
+         * repeatParts[2] -> The track by expression (if present)
+         */
+        var repeatParts = repeatLine.split(/\sin\s|\strack\sby\s/g)
+          , smItem = scope.$eval(repeatParts[0])
+          , hasTrackBy = repeatParts.length > 2;
 
         var updateDom = function() {
           if(smItem[selectedAttribute]) {
@@ -154,8 +221,17 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           if('checkbox' === smType) {
-            var cb = element.find('input');
-            cb.prop('checked', smItem[selectedAttribute]);
+            var checkboxes = [];
+            angular.forEach(element.find('input'), function(input) {
+              input = angular.element(input);
+              if (input.attr('type') === 'checkbox') {
+                checkboxes.push(input);
+              }
+            });
+            
+            if(checkboxes.length) {
+              checkboxes[0].prop('checked', smItem[selectedAttribute]);
+            }
           }
         };
 
@@ -166,16 +242,47 @@ angular.module('selectionModel').directive('selectionModel', [
         // Strips away filters - this lets us e.g. deselect items that are
         // filtered out
         var getAllItems = function() {
-          return scope.$eval(repeatParts[1].split('|')[0]);
+          return scope.$eval(repeatParts[1].split(/[|=]/)[0]);
         };
 
-        var deselectAllItems = function() {
-          angular.forEach(getAllItems(), function(item) {
-            item[selectedAttribute] = false;
-          });
-          if(angular.isArray(selectedItemsList)) {
+        // Get us back to a "clean" state. Usually we'll want to skip
+        // deselection for items that are about to be selected again to avoid
+        // firing the `selection-mode-on-change` handler extra times.
+        //
+        // `except` param may be `undefined` (deselect all the things), a single
+        // item (don't deselect *that* item), or an array of two items (don't
+        // deselect anything between those items inclusively).
+        var deselectAllItemsExcept = function(except) {
+          var useSelectedArray = angular.isArray(selectedItemsList)
+            , isRange = angular.isArray(except) && 2 === except.length
+            , allItems = getAllItems()
+            , numItemsFound = 0
+            , doDeselect = false
+            , ixItem;
+          if(useSelectedArray) {
             selectedItemsList.length = 0;
           }
+          angular.forEach(allItems, function(item) {
+            if(isRange) {
+              ixItem = except.indexOf(item);
+              if(ixItem > -1) {
+                numItemsFound++;
+                doDeselect = false;
+                except.splice(ixItem, 1);
+              } else {
+                doDeselect = 1 !== numItemsFound;
+              }
+            } else {
+              doDeselect = item !== except;
+            }
+            if(doDeselect) {
+              item[selectedAttribute] = false;
+            } else {
+              if(useSelectedArray && item[selectedAttribute]) {
+                selectedItemsList.push(item);
+              }
+            }
+          });
         };
 
         var selectItemsBetween = function(lastItem) {
@@ -218,6 +325,27 @@ angular.module('selectionModel').directive('selectionModel', [
          * checkbox is in.
          */
         var handleClick = function(event) {
+
+          /**
+           * Set by the `selectionModelIgnore` directive
+           *
+           * Use `selectionModelIgnore` to cause `selectionModel` to selectively
+           * ignore clicks on elements. This is useful if you want to manually
+           * change a selection when certain things are clicked.
+           */
+          if(event.selectionModelIgnore || (event.originalEvent && event.originalEvent.selectionModelIgnore)) {
+            return;
+          }
+
+          // Never handle a single click twice.
+          if(event.selectionModelClickHandled || (event.originalEvent && event.originalEvent.selectionModelClickHandled)) {
+            return;
+          }
+          event.selectionModelClickHandled = true;
+          if(event.originalEvent) {
+            event.originalEvent.selectionModelClickHandled = true;
+          }
+
           var isCtrlKeyDown = event.ctrlKey || event.metaKey || isModeAdditive
             , isShiftKeyDown = event.shiftKey
             , target = event.target || event.srcElement
@@ -225,15 +353,37 @@ angular.module('selectionModel').directive('selectionModel', [
                 'INPUT' === target.tagName &&
                 'checkbox' === target.type;
 
-          if(isCheckboxClick) {
-            event.stopPropagation();
+          /**
+           * Guard against label + checkbox clicks
+           *
+           * Clicking a label will cause a click event to also be fired on the
+           * associated input element. If that input is nearby (i.e. under the
+           * selection model element) we'll suppress the click on the label to
+           * avoid duplicate click events.
+           */
+          if('LABEL' === target.tagName) {
+            var labelFor = angular.element(target).attr('for');
+            if(labelFor) {
+              var childInputs = element[0].getElementsByTagName('INPUT'), ix;
+              for(ix = childInputs.length; ix--;) {
+                if(childInputs[ix].id === labelFor) {
+                  return;
+                }
+              }
+            } else if(target.getElementsByTagName('INPUT').length) {
+              // Label has a nested input element, we'll handle the click on
+              // that element
+              return;
+            }
           }
 
           // Select multiple allows for ranges - use shift key
           if(isShiftKeyDown && isMultiMode && !isCheckboxClick) {
             // Use ctrl+shift for additive ranges
             if(!isCtrlKeyDown) {
-              scope.$apply(deselectAllItems);
+              scope.$apply(function() {
+                deselectAllItemsExcept([smItem, selectionStack.peek(clickStackId)]);
+              });
             }
             selectItemsBetween(selectionStack.peek(clickStackId));
             scope.$apply();
@@ -244,7 +394,7 @@ angular.module('selectionModel').directive('selectionModel', [
           if(isCtrlKeyDown || isShiftKeyDown || isCheckboxClick) {
             var isSelected = !smItem[selectedAttribute];
             if(!isMultiMode) {
-              deselectAllItems();
+              deselectAllItemsExcept(smItem);
             }
             smItem[selectedAttribute] = isSelected;
             if(smItem[selectedAttribute]) {
@@ -255,7 +405,7 @@ angular.module('selectionModel').directive('selectionModel', [
           }
 
           // Otherwise the clicked on row becomes the only selected item
-          deselectAllItems();
+          deselectAllItemsExcept(smItem);
           scope.$apply();
 
           smItem[selectedAttribute] = true;
@@ -263,32 +413,12 @@ angular.module('selectionModel').directive('selectionModel', [
           scope.$apply();
         };
 
-        element.on('click', handleClick);
-        if('checkbox' === smType) {
-          var elCb = element.find('input');
-          if(elCb[0] && 'checkbox' === elCb[0].type) {
-            element.find('input').on('click', handleClick);
-          }
-        }
-
-        // We might be coming in with a selection
-        updateDom();
-
-        // If we were given a cleanup strategy then setup a `'$destroy'`
-        // listener on the scope.
-        if('deselect' === cleanupStrategy) {
-          scope.$on('$destroy', function() {
-            smItem[selectedAttribute] = false;
-          });
-        }
-
-        scope.$watch(repeatParts[0] + '.' + selectedAttribute, function(newVal, oldVal) {
-          // Be mindful of programmatic changes to selected state
-          if(!isMultiMode && newVal && !oldVal) {
-            deselectAllItems();
-            smItem[selectedAttribute] = true;
-          }
-
+        /**
+         * Routine to keep the list of selected items up to date
+         *
+         * Adds/removes this item from `selectionModelSelectedItems`.
+         */
+        var updateSelectedItemsList = function() {
           if(angular.isArray(selectedItemsList)) {
             var ixSmItem = selectedItemsList.indexOf(smItem);
             if(smItem[selectedAttribute]) {
@@ -301,9 +431,56 @@ angular.module('selectionModel').directive('selectionModel', [
               }
             }
           }
+        };
 
-          updateDom();
+        element.on('click', handleClick);
+        if('checkbox' === smType) {
+          var elCb = element.find('input');
+          if(elCb[0] && 'checkbox' === elCb[0].type) {
+            element.find('input').on('click', handleClick);
+          }
+        }
+
+        // We might be coming in with a selection
+        updateDom();
+        updateSelectedItemsList();
+
+        // If we were given a cleanup strategy then setup a `'$destroy'`
+        // listener on the scope.
+        if('deselect' === cleanupStrategy) {
+          scope.$on('$destroy', function() {
+            var oldSelectedStatus = smItem[selectedAttribute];
+            smItem[selectedAttribute] = false;
+            updateSelectedItemsList();
+            if(smOnChange && oldSelectedStatus) {
+              scope.$eval(smOnChange);
+            }
+          });
+        }
+
+        scope.$watch(repeatParts[0] + '.' + selectedAttribute, function(newVal, oldVal) {
+          // Be mindful of programmatic changes to selected state
+          if(newVal !== oldVal) {
+            if(!isMultiMode && newVal && !oldVal) {
+              deselectAllItemsExcept(smItem);
+              smItem[selectedAttribute] = true;
+            }
+            updateDom();
+            updateSelectedItemsList();
+
+            if(smOnChange) {
+              scope.$eval(smOnChange);
+            }
+          }
         });
+
+        // If we're using track-by with ngRepeat it's possible the item
+        // reference will change without this directive getting re-linked.
+        if(hasTrackBy) {
+          scope.$watch(repeatParts[0], function(newVal) {
+            smItem = newVal;
+          });
+        }
       }
     };
   }

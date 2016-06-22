@@ -1,6 +1,6 @@
 {
   "name": "selection-model",
-  "version": "0.6.1",
+  "version": "0.11.0",
   "authors": [
     "jtrussell"
   ],
@@ -25,20 +25,19 @@
     "gruntfile.js"
   ],
   "dependencies": {
-    "angular": "~1.2.6"
+    "angular": "^1.2.6"
   },
   "devDependencies": {
-    "angular-mocks": "~1.2.6",
+    "angular-mocks": "^1.2.6",
     "jquery": "~2.1.0"
   },
-  "_release": "0.6.1",
+  "_release": "0.11.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.6.1",
-    "commit": "f82a566b43ea49b72a855b9c1bdcd4fe4179d4a9"
+    "tag": "v0.11.0",
+    "commit": "b36fb13694bf6e1174d8ddfe74f40c8391737865"
   },
-  "_source": "git://github.com/jtrussell/angular-selection-model.git",
-  "_target": "~0.6.1",
-  "_originalSource": "angular-selection-model",
-  "_direct": true
+  "_source": "https://github.com/jtrussell/angular-selection-model.git",
+  "_target": "^0.11.0",
+  "_originalSource": "angular-selection-model"
 }
