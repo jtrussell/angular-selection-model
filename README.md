@@ -99,7 +99,7 @@ Type: `String`
 Default: `'single'`
 
 May be be either `'single'`, `'multiple'`, or `'multiple-additive'`. Make use of
-the multi* modes to to allow the user select more than one item at a time.
+the multi* modes to allow the user select more than one item at a time.
 
 The behavior of the multi select mode is modeled after ExtJS data grids. By
 default a vanilla click (no `shift` or `ctrl`) will set the entire selection to
